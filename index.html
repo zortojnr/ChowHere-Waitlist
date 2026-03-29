@@ -1,0 +1,2008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ChowApp</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --green: #0F4C2A;
+      --green-deep: #0a3520;
+      --orange: #E8621A;
+      --cream: #FAF5EC;
+      --cream-muted: #f3ebe0;
+      --dark: #0A1F10;
+      --gold: #C9A227;
+      --white: #ffffff;
+      --shadow-hard: 4px 4px 0 var(--dark);
+      --shadow-hard-sm: 2px 2px 0 var(--dark);
+      --space-1: 0.25rem;
+      --space-2: 0.5rem;
+      --space-3: 1rem;
+      --space-4: 1.5rem;
+      --space-5: 2.5rem;
+      --space-6: 4rem;
+      --section-y-sm: clamp(2.5rem, 6vw, 3.5rem);
+      --section-y-lg: clamp(3.5rem, 8vw, 5.5rem);
+      --container-max: min(1180px, 100% - 2rem);
+      --prose-width: 42rem;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      border-radius: 0 !important;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "DM Sans", system-ui, sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: var(--dark);
+      background: var(--cream);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      padding-left: env(safe-area-inset-left, 0);
+      padding-right: env(safe-area-inset-right, 0);
+    }
+
+    h1, h2, h3, h4 {
+      font-family: "Playfair Display", Georgia, serif;
+      font-weight: 900;
+      line-height: 1.2;
+      margin: 0 0 0.5rem;
+    }
+
+    .font-mono {
+      font-family: "Space Mono", ui-monospace, monospace;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: var(--container-max);
+      margin-inline: auto;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(1.25rem);
+      transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1), transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .reveal.reveal--visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+    }
+
+    /* ——— Fixed navbar ——— */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(250, 245, 236, 0.92);
+      border-bottom: 2px solid var(--dark);
+      backdrop-filter: saturate(1.2) blur(10px);
+      -webkit-backdrop-filter: saturate(1.2) blur(10px);
+      box-shadow: 0 1px 0 rgba(10, 31, 16, 0.06);
+    }
+
+    @supports not (backdrop-filter: blur(1px)) {
+      .site-header {
+        background: var(--cream);
+      }
+    }
+
+    .nav-inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      padding: var(--space-3) 0;
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-family: "Playfair Display", Georgia, serif;
+      font-weight: 900;
+      font-size: 1.4rem;
+      letter-spacing: -0.02em;
+      color: var(--dark);
+    }
+
+    .logo-mark {
+      width: 2rem;
+      height: 2rem;
+      flex-shrink: 0;
+      border: 2px solid var(--dark);
+      background: linear-gradient(135deg, var(--green) 50%, var(--orange) 50%);
+      box-shadow: var(--shadow-hard-sm);
+    }
+
+    .logo span {
+      color: var(--orange);
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-2) var(--space-4);
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-links a {
+      font-size: 0.875rem;
+      font-weight: 600;
+      padding: var(--space-1) 0;
+      box-shadow: inset 0 -2px 0 transparent;
+      transition: color 0.2s, box-shadow 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--orange);
+      box-shadow: inset 0 -2px 0 var(--orange);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      font-family: "DM Sans", sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 0.65rem 1.35rem;
+      border: 2px solid var(--dark);
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;
+    }
+
+    .btn:active {
+      transform: translate(1px, 1px);
+      box-shadow: none;
+    }
+
+    .btn-orange {
+      background: var(--orange);
+      color: var(--white);
+      border-color: var(--dark);
+      box-shadow: var(--shadow-hard-sm);
+    }
+
+    .btn-orange:hover {
+      background: #d45612;
+      color: var(--white);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--dark);
+    }
+
+    .btn-ghost:hover {
+      background: var(--dark);
+      color: var(--cream);
+    }
+
+    /* ——— Hero ——— */
+    .hero {
+      position: relative;
+      background: linear-gradient(165deg, var(--green) 0%, var(--green-deep) 55%, #083218 100%);
+      color: var(--cream);
+      padding: var(--section-y-lg) 0;
+      border-bottom: 2px solid var(--dark);
+      overflow: hidden;
+    }
+
+    .hero-decor {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.12;
+      background-image:
+        repeating-linear-gradient(-45deg, transparent, transparent 8px, var(--cream) 8px, var(--cream) 9px),
+        linear-gradient(90deg, rgba(250, 245, 236, 0.03) 1px, transparent 1px);
+      background-size: auto, 48px 100%;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: var(--space-5);
+      align-items: end;
+      margin-bottom: var(--space-5);
+    }
+
+    @media (min-width: 900px) {
+      .hero-grid {
+        grid-template-columns: 1fr minmax(220px, 280px);
+        gap: var(--space-6);
+        align-items: end;
+      }
+    }
+
+    .hero-copy .tag {
+      margin-bottom: var(--space-3);
+    }
+
+    .tag--hero {
+      display: inline-block;
+      font-family: "Space Mono", monospace;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 0.45rem 0.85rem;
+      border: 2px solid var(--cream);
+      border-left: 4px solid var(--orange);
+      background: rgba(10, 31, 16, 0.25);
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 4.5vw, 3.15rem);
+      max-width: 14em;
+      line-height: 1.08;
+      color: var(--cream);
+      letter-spacing: -0.03em;
+    }
+
+    .hero .lead {
+      max-width: var(--prose-width);
+      opacity: 0.94;
+      margin: var(--space-3) 0 0;
+      font-size: clamp(1rem, 1.5vw, 1.08rem);
+    }
+
+    .hero-stats-aside {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-2);
+    }
+
+    @media (min-width: 900px) {
+      .hero-stats-aside {
+        grid-template-columns: 1fr;
+        gap: var(--space-2);
+      }
+    }
+
+    .stat-card--hero {
+      border: 2px solid rgba(250, 245, 236, 0.45);
+      padding: var(--space-3) var(--space-3);
+      background: rgba(10, 31, 16, 0.35);
+      text-align: left;
+      box-shadow: inset 0 0 0 1px rgba(250, 245, 236, 0.08);
+    }
+
+    .stat-card--hero .stat-value {
+      font-family: "Playfair Display", serif;
+      font-weight: 900;
+      font-size: clamp(1.5rem, 3vw, 1.85rem);
+      line-height: 1.1;
+      display: block;
+    }
+
+    .stat-card--hero .stat-label {
+      font-family: "Space Mono", monospace;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.88;
+      margin-top: 0.35rem;
+    }
+
+    .search-panel {
+      border: 2px solid var(--dark);
+      padding: var(--space-4);
+      background: rgba(250, 245, 236, 0.97);
+      color: var(--dark);
+      box-shadow: var(--shadow-hard);
+    }
+
+    .search-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      align-items: stretch;
+      margin-bottom: var(--space-3);
+    }
+
+    .search-row input[type="search"],
+    .search-row input[type="text"] {
+      flex: 1 1 160px;
+      min-width: 0;
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--dark);
+      font-family: "DM Sans", sans-serif;
+      font-size: 1rem;
+      background: var(--cream);
+      color: var(--dark);
+    }
+
+    .search-row input::placeholder {
+      color: rgba(10, 31, 16, 0.55);
+    }
+
+    .location-wrap {
+      position: relative;
+      flex: 0 0 auto;
+    }
+
+    .location-select {
+      appearance: none;
+      -webkit-appearance: none;
+      font-family: "Space Mono", monospace;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 0.75rem 2.25rem 0.75rem 0.85rem;
+      border: 2px solid var(--dark);
+      background: var(--cream);
+      color: var(--dark);
+      cursor: pointer;
+      min-width: 7.5rem;
+      background-image: linear-gradient(45deg, transparent 50%, var(--dark) 50%),
+        linear-gradient(135deg, var(--dark) 50%, transparent 50%);
+      background-position: calc(100% - 14px) calc(50% + 3px), calc(100% - 9px) calc(50% + 3px);
+      background-size: 5px 5px, 5px 5px;
+      background-repeat: no-repeat;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin-top: var(--space-3);
+    }
+
+    .chip {
+      font-family: "Space Mono", monospace;
+      font-size: 0.72rem;
+      padding: 0.5rem 0.75rem;
+      border: 2px solid var(--dark);
+      background: var(--cream);
+      color: var(--dark);
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;
+      min-height: 40px;
+    }
+
+    .chip:hover {
+      background: var(--orange);
+      color: var(--white);
+      box-shadow: var(--shadow-hard-sm);
+    }
+
+    .chip:active {
+      transform: translate(1px, 1px);
+    }
+
+    .search-panel .btn-ghost-hero {
+      border-color: var(--dark);
+      color: var(--dark);
+      background: var(--cream-muted);
+      box-shadow: var(--shadow-hard-sm);
+    }
+
+    .search-panel .btn-ghost-hero:hover {
+      background: var(--green);
+      color: var(--cream);
+      border-color: var(--dark);
+    }
+
+    .search-panel .loc-status-badge {
+      border-color: var(--dark);
+      color: var(--dark);
+      background: var(--white);
+    }
+
+    .search-panel .loc-status-badge.verified {
+      border-color: var(--gold);
+      color: var(--green-deep);
+      background: rgba(201, 162, 39, 0.12);
+    }
+
+    .search-panel .geo-hint.is-visible {
+      color: var(--dark);
+    }
+
+    .search-panel .hero-city-note {
+      color: var(--dark);
+      opacity: 0.85;
+    }
+
+    .location-verify-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .loc-status-badge {
+      font-family: "Space Mono", monospace;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.35rem 0.55rem;
+      border: 2px solid var(--cream);
+      color: var(--cream);
+    }
+
+    .loc-status-badge.verified {
+      background: rgba(250, 245, 236, 0.15);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .geo-hint {
+      font-size: 0.85rem;
+      margin: 0 0 0.75rem;
+      max-width: 40rem;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity 0.2s, max-height 0.2s;
+    }
+
+    .geo-hint.is-visible {
+      opacity: 1;
+      max-height: 4rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero-city-note {
+      font-family: "Space Mono", monospace;
+      font-size: 0.68rem;
+      opacity: 0.85;
+      margin: 0 0 1rem;
+      max-width: 40rem;
+    }
+
+    .rest-placeholder {
+      border: 2px dashed var(--dark);
+      padding: var(--space-5) var(--space-4);
+      background: rgba(255, 255, 255, 0.75);
+      text-align: center;
+      margin-bottom: var(--space-4);
+      box-shadow: inset 0 0 0 1px rgba(10, 31, 16, 0.06);
+    }
+
+    .rest-meta-line {
+      font-family: "Space Mono", monospace;
+      font-size: 0.78rem;
+      margin: -0.5rem 0 var(--space-4);
+      opacity: 0.88;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .rest-status-line {
+      font-family: "Space Mono", monospace;
+      font-size: 0.82rem;
+      margin: -0.75rem 0 var(--space-3);
+      line-height: 1.45;
+      overflow-wrap: anywhere;
+    }
+
+    .rest-placeholder[hidden],
+    #rest-grid-wrap[hidden] {
+      display: none !important;
+    }
+
+    /* ——— Section shells ——— */
+    section {
+      padding: var(--section-y-lg) 0;
+      border-bottom: 2px solid var(--dark);
+    }
+
+    .section-label {
+      font-family: "Space Mono", monospace;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--orange);
+      margin-bottom: var(--space-2);
+    }
+
+    .section-idx {
+      opacity: 0.55;
+      font-weight: 700;
+    }
+
+    .section-title {
+      font-size: clamp(1.75rem, 3.5vw, 2.35rem);
+      margin-bottom: var(--space-4);
+      letter-spacing: -0.02em;
+    }
+
+    .section-title--lg {
+      font-size: clamp(2rem, 4vw, 2.6rem);
+    }
+
+    /* Categories */
+    #browse-dishes {
+      background: linear-gradient(180deg, var(--cream) 0%, var(--cream-muted) 100%);
+    }
+
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.65rem;
+    }
+
+    .cat-card {
+      border: 2px solid var(--dark);
+      padding: 1.25rem 1.15rem;
+      background: var(--white);
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.22s, color 0.22s, border-color 0.22s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: var(--shadow-hard-sm);
+    }
+
+    .cat-card:hover {
+      background: var(--green);
+      color: var(--cream);
+      border-color: var(--dark);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hard);
+    }
+
+    .cat-card:active {
+      transform: translateY(-1px);
+    }
+
+    .cat-card:focus-visible {
+      outline: 3px solid var(--orange);
+      outline-offset: 3px;
+    }
+
+    .cat-card h3 {
+      font-size: 1.15rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .cat-card:hover h3 {
+      color: var(--cream);
+    }
+
+    .cat-meta {
+      font-family: "Space Mono", monospace;
+      font-size: 0.75rem;
+      opacity: 0.85;
+    }
+
+    .cat-card:hover .cat-meta {
+      opacity: 0.9;
+    }
+
+    /* Dish of the Day */
+    #dish-of-the-day {
+      background: linear-gradient(180deg, #0d2818 0%, var(--dark) 40%, #050a08 100%);
+      color: var(--cream);
+    }
+
+    #dish-of-the-day .section-label {
+      color: var(--orange);
+    }
+
+    .section-label--dotd {
+      margin-bottom: 0.5rem !important;
+    }
+
+    #dish-of-the-day .section-title {
+      color: var(--cream);
+    }
+
+    .dotd-grid {
+      display: grid;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    @media (min-width: 900px) {
+      .dotd-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .badge {
+      display: inline-block;
+      font-family: "Space Mono", monospace;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.35rem 0.6rem;
+      border: 2px solid var(--cream);
+      margin-bottom: 0.75rem;
+    }
+
+    .badge-gold {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin: 1rem 0 1.25rem;
+    }
+
+    .dish-tag {
+      font-family: "Space Mono", monospace;
+      font-size: 0.68rem;
+      padding: 0.3rem 0.5rem;
+      border: 2px solid rgba(250, 245, 236, 0.5);
+    }
+
+    .plate-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 220px;
+      border: 2px solid var(--cream);
+      outline: 2px solid var(--gold);
+      outline-offset: 6px;
+      background:
+        linear-gradient(145deg, rgba(15, 76, 42, 0.6) 0%, rgba(10, 31, 16, 0.9) 100%);
+      box-shadow: inset 0 0 0 1px rgba(250, 245, 236, 0.12);
+    }
+
+    .plate {
+      font-size: 5rem;
+      display: inline-block;
+      animation: spin-plate 8s linear infinite;
+    }
+
+    @keyframes spin-plate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .plate {
+        animation: none;
+      }
+    }
+
+    /* How it works */
+    #how-it-works {
+      background: var(--cream-muted);
+    }
+
+    .steps-grid {
+      display: grid;
+      gap: var(--space-3);
+    }
+
+    @media (min-width: 768px) {
+      .steps-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .steps-grid {
+        gap: var(--space-4);
+      }
+    }
+
+    .step-card {
+      border: 2px solid var(--dark);
+      padding: var(--space-4) var(--space-3);
+      background: var(--white);
+      border-left: 5px solid var(--orange);
+      box-shadow: var(--shadow-hard-sm);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .step-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hard);
+    }
+
+    .step-num {
+      font-family: "Space Mono", monospace;
+      font-size: 0.72rem;
+      color: var(--orange);
+      margin-bottom: var(--space-2);
+      letter-spacing: 0.06em;
+    }
+
+    .step-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: var(--space-2);
+    }
+
+    /* Featured restaurants */
+    #restaurants {
+      background: linear-gradient(180deg, var(--cream-muted) 0%, var(--cream) 100%);
+    }
+
+    .rest-grid {
+      display: grid;
+      gap: 0.65rem;
+    }
+
+    @media (min-width: 768px) {
+      .rest-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .rest-card {
+      border: 2px solid var(--dark);
+      padding: var(--space-4);
+      background: var(--white);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      box-shadow: var(--shadow-hard-sm);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .rest-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hard);
+    }
+
+    .rest-head {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.5rem;
+      align-items: flex-start;
+    }
+
+    .rest-card h3 {
+      font-size: 1.2rem;
+      line-height: 1.25;
+    }
+
+    .hood {
+      font-family: "Space Mono", monospace;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .status {
+      font-family: "Space Mono", monospace;
+      font-size: 0.68rem;
+      padding: 0.25rem 0.45rem;
+      border: 2px solid var(--dark);
+      width: fit-content;
+    }
+
+    .status.open {
+      background: var(--green);
+      color: var(--cream);
+    }
+
+    .rest-dishes {
+      font-size: 0.92rem;
+      line-height: 1.45;
+      opacity: 0.92;
+    }
+
+    .accuracy {
+      font-family: "Space Mono", monospace;
+      font-size: 0.72rem;
+      margin-top: auto;
+      padding-top: var(--space-3);
+      border-top: 2px solid rgba(10, 31, 16, 0.12);
+    }
+
+    .accuracy-label {
+      display: block;
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.75;
+      margin-bottom: 0.2rem;
+    }
+
+    /* AI section */
+    #ai-recommend {
+      background: linear-gradient(165deg, var(--green) 0%, var(--green-deep) 100%);
+      color: var(--cream);
+    }
+
+    #ai-recommend .section-title {
+      color: var(--cream);
+    }
+
+    .ai-wrap {
+      position: relative;
+      border: 2px solid rgba(250, 245, 236, 0.35);
+      padding: 3.5rem var(--space-4) var(--space-4);
+      background: rgba(10, 31, 16, 0.45);
+      box-shadow: var(--shadow-hard-sm);
+    }
+
+    .ai-coming {
+      position: absolute;
+      top: 0.65rem;
+      right: 0.65rem;
+      font-family: "Space Mono", monospace;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.35rem 0.5rem;
+      border: 2px solid var(--cream);
+      background: rgba(10, 31, 16, 0.85);
+      color: var(--cream);
+      pointer-events: none;
+    }
+
+    .bubble {
+      max-width: 85%;
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--dark);
+      margin-bottom: 0.65rem;
+      font-size: 0.95rem;
+    }
+
+    .bubble-user {
+      background: var(--cream);
+      color: var(--dark);
+      margin-left: auto;
+    }
+
+    .bubble-ai {
+      background: rgba(250, 245, 236, 0.15);
+      color: var(--cream);
+    }
+
+    .bubble-label {
+      font-family: "Space Mono", monospace;
+      font-size: 0.65rem;
+      opacity: 0.8;
+      margin-bottom: 0.35rem;
+    }
+
+    .ai-input-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .ai-input-row input {
+      flex: 1 1 180px;
+      padding: 0.65rem 0.85rem;
+      border: 2px solid var(--dark);
+      font-family: "DM Sans", sans-serif;
+      background: var(--cream);
+    }
+
+    /* Other cities */
+    #other-cities {
+      background: var(--cream-muted);
+    }
+
+    #other-cities .section-title {
+      margin-bottom: var(--space-2);
+    }
+
+    #other-cities > .container > p {
+      margin: 0 0 var(--space-4);
+      max-width: var(--prose-width);
+      opacity: 0.9;
+    }
+
+    .city-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 0.65rem;
+    }
+
+    .city-card {
+      position: relative;
+      border: 2px solid var(--dark);
+      padding: var(--space-3);
+      min-height: 92px;
+      background: var(--white);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: var(--shadow-hard-sm);
+    }
+
+    .city-card:hover {
+      background: rgba(232, 98, 26, 0.1);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hard);
+    }
+
+    .city-card:active {
+      transform: translate(1px, 1px);
+    }
+
+    .city-card h3 {
+      font-size: 1rem;
+    }
+
+    .city-card .soon {
+      font-family: "Space Mono", monospace;
+      font-size: 0.65rem;
+      margin-top: 0.35rem;
+      padding: 0.2rem 0.4rem;
+      border: 2px solid var(--dark);
+      width: fit-content;
+    }
+
+    /* List restaurant */
+    #list-restaurant {
+      background: linear-gradient(180deg, var(--green-deep) 0%, var(--green) 50%, var(--green-deep) 100%);
+      color: var(--cream);
+    }
+
+    #list-restaurant .section-label {
+      color: var(--orange);
+    }
+
+    #list-restaurant .section-title {
+      color: var(--cream);
+    }
+
+    .list-grid {
+      display: grid;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    @media (min-width: 900px) {
+      .list-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    #list-restaurant .list-grid > div:first-child > p:not(.section-label) {
+      max-width: var(--prose-width);
+    }
+
+    .perks {
+      list-style: none;
+      margin: 1rem 0 1.25rem;
+      padding: 0;
+    }
+
+    .perks li {
+      padding: 0.35rem 0;
+      padding-left: 1.25rem;
+      position: relative;
+    }
+
+    .perks li::before {
+      content: "▸";
+      position: absolute;
+      left: 0;
+      color: var(--orange);
+      font-weight: 700;
+    }
+
+    .mini-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+    }
+
+    .mini-stat {
+      border: 2px solid rgba(250, 245, 236, 0.45);
+      padding: var(--space-4) var(--space-3);
+      background: rgba(10, 31, 16, 0.45);
+      box-shadow: inset 0 0 0 1px rgba(250, 245, 236, 0.08);
+    }
+
+    .mini-stat .stat-value {
+      font-size: 1.35rem;
+      color: var(--cream);
+    }
+
+    .mini-stat .stat-label {
+      color: var(--cream);
+    }
+
+    /* Footer */
+    .site-footer {
+      background: #030806;
+      color: var(--cream);
+      padding: var(--space-6) 0 0;
+      border-top: 3px solid var(--orange);
+    }
+
+    .footer-top {
+      padding-bottom: var(--space-5);
+    }
+
+    .footer-brand .logo {
+      color: var(--cream);
+    }
+
+    .footer-tag {
+      margin: var(--space-2) 0 0;
+      max-width: 22rem;
+      opacity: 0.82;
+      font-size: 0.95rem;
+      line-height: 1.55;
+    }
+
+    .footer-made {
+      font-family: "Space Mono", monospace;
+      font-size: 0.72rem;
+      margin-top: var(--space-4);
+      opacity: 0.75;
+    }
+
+    .footer-cols {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-5) var(--space-4);
+      margin-top: var(--space-5);
+    }
+
+    @media (min-width: 768px) {
+      .footer-cols {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .footer-col h4 {
+      font-family: "Space Mono", monospace;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--orange);
+      margin-bottom: 0.65rem;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .footer-col a {
+      font-size: 0.875rem;
+      display: block;
+      padding: 0.35rem 0;
+      opacity: 0.78;
+      transition: color 0.2s, opacity 0.2s;
+    }
+
+    .footer-col a:hover {
+      color: var(--orange);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(250, 245, 236, 0.12);
+      padding: var(--space-4) 0;
+      margin-top: var(--space-5);
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2) var(--space-4);
+      justify-content: space-between;
+      font-family: "Space Mono", monospace;
+      font-size: 0.68rem;
+      opacity: 0.8;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      top: 0;
+      padding: 0.5rem 1rem;
+      background: var(--orange);
+      color: var(--white);
+      z-index: 2000;
+    }
+
+    .skip-link:focus {
+      left: 0.5rem;
+      top: 0.5rem;
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--orange);
+      outline-offset: 2px;
+    }
+
+    .nav-cta-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      margin-left: auto;
+      border: 2px solid var(--dark);
+      background: var(--cream);
+      cursor: pointer;
+      box-shadow: var(--shadow-hard-sm);
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+
+    .nav-toggle:hover {
+      background: var(--cream-muted);
+    }
+
+    .nav-toggle-bar {
+      display: block;
+      width: 1.15rem;
+      height: 2px;
+      background: var(--dark);
+      transition: transform 0.2s, opacity 0.2s;
+    }
+
+    .nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    .nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(2) {
+      opacity: 0;
+    }
+
+    .nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .nav-toggle-bar {
+        transition: none;
+      }
+    }
+
+    .nav-shell {
+      display: contents;
+    }
+
+    @media (max-width: 639px) {
+      .nav-inner {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-start;
+        gap: var(--space-2);
+      }
+
+      .nav-toggle {
+        display: inline-flex;
+      }
+
+      .nav-shell {
+        display: none;
+        width: 100%;
+        flex-basis: 100%;
+        margin-top: var(--space-3);
+        padding: var(--space-3);
+        border: 2px solid var(--dark);
+        background: var(--cream);
+        box-shadow: var(--shadow-hard-sm);
+      }
+
+      .nav-shell.is-open {
+        display: block;
+      }
+
+      .nav-links {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+      }
+
+      .nav-links li {
+        border-bottom: 1px solid rgba(10, 31, 16, 0.12);
+      }
+
+      .nav-links li:last-child {
+        border-bottom: none;
+      }
+
+      .nav-links a {
+        display: block;
+        padding: var(--space-3) 0;
+      }
+
+      .nav-cta-wrap {
+        width: 100%;
+        margin-top: var(--space-3);
+        padding-top: var(--space-3);
+        border-top: 2px solid var(--dark);
+      }
+
+      .nav-cta-wrap .btn {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero h1 {
+        max-width: 100%;
+      }
+
+      .hero-stats-aside {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .stat-card--hero {
+        padding: var(--space-2);
+      }
+
+      .stat-card--hero .stat-value {
+        font-size: 1.35rem;
+      }
+
+      .search-row .btn.btn-orange {
+        flex: 1 1 100%;
+        width: 100%;
+      }
+
+      .location-wrap,
+      .location-select {
+        flex: 1 1 100%;
+        width: 100%;
+      }
+
+      .location-select {
+        min-width: 0;
+      }
+
+      .location-verify-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .location-verify-row .loc-status-badge {
+        text-align: center;
+      }
+
+      .location-verify-row .btn-ghost-hero {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .bubble {
+        max-width: 100%;
+        font-size: 0.9rem;
+      }
+
+      .rest-placeholder,
+      .rest-status-line,
+      .rest-meta-line,
+      .hero-city-note {
+        overflow-wrap: anywhere;
+      }
+    }
+
+    @media (min-width: 481px) and (max-width: 639px) {
+      .search-row .btn.btn-orange {
+        flex: 1 1 auto;
+        min-width: 8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link font-mono" href="#browse-dishes">Skip to dishes</a>
+
+  <header class="site-header">
+    <div class="container nav-inner">
+      <a class="logo" href="#"><span class="logo-mark" aria-hidden="true"></span> Chow<span>App</span></a>
+      <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-mobile-shell" aria-label="Open menu">
+        <span class="nav-toggle-bar" aria-hidden="true"></span>
+        <span class="nav-toggle-bar" aria-hidden="true"></span>
+        <span class="nav-toggle-bar" aria-hidden="true"></span>
+      </button>
+      <div class="nav-shell" id="nav-mobile-shell">
+        <nav aria-label="Primary">
+          <ul class="nav-links">
+            <li><a href="#browse-dishes">Browse Dishes</a></li>
+            <li><a href="#how-it-works">How It Works</a></li>
+            <li><a href="#restaurants">Restaurants</a></li>
+            <li><a href="#list-restaurant">List Your Place</a></li>
+          </ul>
+        </nav>
+        <div class="nav-cta-wrap">
+          <a class="btn btn-orange btn-nav" href="#list-restaurant">Get Started</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero reveal reveal--visible" id="hero" aria-labelledby="hero-title">
+      <div class="hero-decor" aria-hidden="true"></div>
+      <div class="container hero-inner">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <p class="tag tag--hero">Nigeria's #1 Food Discovery Platform</p>
+            <h1 id="hero-title">Find the exact dish you're craving, right now</h1>
+            <p class="lead">Search 500+ Nigerian dishes and see which Abuja restaurants serve them — verified, accurate, and updated daily. Verify your location so we can show the <strong>nearest</strong> matches sorted by distance.</p>
+          </div>
+          <div class="hero-stats-aside" aria-label="Platform stats">
+            <div class="stat-card stat-card--hero">
+              <span class="stat-value"><span class="count-up" data-target="500" data-suffix="+">0</span></span>
+              <span class="stat-label">Dishes</span>
+            </div>
+            <div class="stat-card stat-card--hero">
+              <span class="stat-value"><span class="count-up" data-target="1200" data-suffix="+">0</span></span>
+              <span class="stat-label">Restaurants</span>
+            </div>
+            <div class="stat-card stat-card--hero">
+              <span class="stat-value"><span class="count-up" data-target="100" data-suffix="%">0</span></span>
+              <span class="stat-label">Abuja Coverage</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="search-panel">
+          <div class="search-row">
+            <label class="visually-hidden" for="dish-search">Dish name</label>
+            <input type="search" id="dish-search" name="dish" placeholder="Eg. egusi soup, jollof rice…" autocomplete="off" />
+            <div class="location-wrap">
+              <label class="visually-hidden" for="location-select">Location</label>
+              <select class="location-select" id="location-select" aria-label="Location">
+                <option value="abuja">📍 Abuja</option>
+                <option value="lagos">Lagos</option>
+                <option value="enugu">Enugu</option>
+                <option value="ph">Port Harcourt</option>
+                <option value="ibadan">Ibadan</option>
+                <option value="kano">Kano</option>
+                <option value="benin">Benin City</option>
+                <option value="owerri">Owerri</option>
+                <option value="kaduna">Kaduna</option>
+              </select>
+            </div>
+            <button type="button" class="btn btn-orange" id="btn-find-dish">Find Dish</button>
+          </div>
+
+          <p class="hero-city-note">Serving <strong>Abuja</strong> first. Use the menu next to search to peek at other states (coming soon).</p>
+
+          <div class="location-verify-row">
+            <span class="loc-status-badge" id="loc-status-badge" aria-live="polite">Location not verified</span>
+            <button type="button" class="btn btn-ghost-hero" id="btn-verify-location">Verify my location</button>
+            <button type="button" class="btn btn-ghost-hero" id="btn-verify-fallback">I'm in Abuja (no GPS)</button>
+          </div>
+          <p class="geo-hint font-mono" id="geo-hint" role="status"></p>
+
+          <div class="chips" role="group" aria-label="Quick searches">
+            <button type="button" class="chip" data-fill="Egusi Soup">Egusi Soup</button>
+            <button type="button" class="chip" data-fill="Jollof Rice">Jollof Rice</button>
+            <button type="button" class="chip" data-fill="Suya">Suya</button>
+            <button type="button" class="chip" data-fill="Pounded Yam">Pounded Yam</button>
+            <button type="button" class="chip" data-fill="Pepper Soup">Pepper Soup</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="reveal" id="browse-dishes" aria-labelledby="cat-heading">
+      <div class="container">
+        <p class="section-label"><span class="section-idx">01</span> · Browse by Category</p>
+        <h2 class="section-title" id="cat-heading">What are you in the mood for?</h2>
+        <div class="cat-grid">
+          <button type="button" class="cat-card" data-category="Soups">
+            <h3>Soups</h3>
+            <span class="cat-meta">45 dishes</span>
+          </button>
+          <button type="button" class="cat-card" data-category="Swallows">
+            <h3>Swallows</h3>
+            <span class="cat-meta">12 dishes</span>
+          </button>
+          <button type="button" class="cat-card" data-category="Rice Dishes">
+            <h3>Rice Dishes</h3>
+            <span class="cat-meta">18 dishes</span>
+          </button>
+          <button type="button" class="cat-card" data-category="Grilled & BBQ">
+            <h3>Grilled &amp; BBQ</h3>
+            <span class="cat-meta">22 dishes</span>
+          </button>
+          <button type="button" class="cat-card" data-category="Snacks">
+            <h3>Snacks</h3>
+            <span class="cat-meta">30 dishes</span>
+          </button>
+          <button type="button" class="cat-card" data-category="Street Food">
+            <h3>Street Food</h3>
+            <span class="cat-meta">25 dishes</span>
+          </button>
+          <button type="button" class="cat-card" data-category="Breakfast">
+            <h3>Breakfast</h3>
+            <span class="cat-meta">14 dishes</span>
+          </button>
+          <button type="button" class="cat-card" data-category="Drinks">
+            <h3>Drinks</h3>
+            <span class="cat-meta">16 dishes</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="reveal" id="dish-of-the-day" aria-labelledby="dotd-heading">
+      <div class="container dotd-grid">
+        <div>
+          <p class="section-label section-label--dotd"><span class="section-idx">02</span> · Today</p>
+          <span class="badge">Dish of the Day</span>
+          <h2 class="section-title" id="dotd-heading">Ofe Onugbu (Bitter Leaf Soup)</h2>
+          <p>A rich, savoury Igbo soup built on blended bitter leaf, cocoa yam (or achebe), assorted meat, and stockfish — hearty, deeply flavoured, and perfect with swallow.</p>
+          <div class="tag-row">
+            <span class="dish-tag">Medium heat</span>
+            <span class="dish-tag">Igbo / South-East</span>
+            <span class="dish-tag">Gluten-free</span>
+          </div>
+          <span class="badge badge-gold">South-East Nigeria</span>
+          <p style="margin-top: 1rem;">
+            <button type="button" class="btn btn-orange" id="btn-find-onugbu">Find restaurants serving this</button>
+          </p>
+        </div>
+        <div class="plate-wrap" aria-hidden="true">
+          <span class="plate">🍽️</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="reveal" id="how-it-works" aria-labelledby="how-heading">
+      <div class="container">
+        <p class="section-label"><span class="section-idx">03</span> · How It Works</p>
+        <h2 class="section-title" id="how-heading">Four steps to your next plate</h2>
+        <div class="steps-grid">
+          <article class="step-card">
+            <p class="step-num">Step 01</p>
+            <h3>Search your dish</h3>
+            <p>Type what you're craving — from ofada to okra soup — we match it to real menus.</p>
+          </article>
+          <article class="step-card">
+            <p class="step-num">Step 02</p>
+            <h3>Verify your location</h3>
+            <p>Allow location access or confirm you're in Abuja. We don't assume proximity until you explicitly verify.</p>
+          </article>
+          <article class="step-card">
+            <p class="step-num">Step 03</p>
+            <h3>See verified results</h3>
+            <p>Nearest matches appear after verification — plus accuracy scores and daily menu checks so you don't arrive disappointed.</p>
+          </article>
+          <article class="step-card">
+            <p class="step-num">Step 04</p>
+            <h3>Leave a review</h3>
+            <p>Help the community stay sharp — was the pepper soup worth the drive?</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="reveal" id="restaurants" aria-labelledby="rest-heading">
+      <div class="container">
+        <p class="section-label"><span class="section-idx">04</span> · Featured</p>
+        <h2 class="section-title" id="rest-heading" tabindex="-1">Restaurants in Abuja</h2>
+        <p id="restaurants-status" class="rest-status-line" aria-live="polite">Verify your location above to see nearest restaurants sorted from your position.</p>
+        <p class="rest-meta-line">Neighbourhoods we cover: Wuse 2 · Maitama · Garki · Gwarinpa · Jabi · Utako · Asokoro</p>
+        <div class="rest-placeholder" id="rest-placeholder">
+          <strong>No listings yet</strong> — go to the hero and tap <em>Verify my location</em> or <em>I'm in Abuja (no GPS)</em>. Your nearest picks will appear here.
+        </div>
+        <div class="rest-grid" id="rest-grid-wrap" hidden>
+          <article class="rest-card">
+            <div class="rest-head">
+              <h3>Mama Titi's Kitchen</h3>
+              <span class="hood">Wuse 2</span>
+            </div>
+            <span class="status open">Open Now</span>
+            <p class="rest-dishes">Egusi · Pounded Yam · Ofe Akwu</p>
+            <p class="accuracy"><span class="accuracy-label">Menu match</span> 94%</p>
+          </article>
+          <article class="rest-card">
+            <div class="rest-head">
+              <h3>Alhaji Suya Spot</h3>
+              <span class="hood">Maitama</span>
+            </div>
+            <span class="status open">Open Now</span>
+            <p class="rest-dishes">Suya · Kilishi · Asun</p>
+            <p class="accuracy"><span class="accuracy-label">Menu match</span> 98%</p>
+          </article>
+          <article class="rest-card">
+            <div class="rest-head">
+              <h3>Yellow Chop Bar</h3>
+              <span class="hood">Garki</span>
+            </div>
+            <span class="status">Opens 11am</span>
+            <p class="rest-dishes">Ofe Oha · Ofe Onugbu · Eba</p>
+            <p class="accuracy"><span class="accuracy-label">Menu match</span> 91%</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="reveal" id="ai-recommend" aria-labelledby="ai-heading">
+      <div class="container">
+        <p class="section-label"><span class="section-idx">05</span> · Smart picks</p>
+        <h2 class="section-title" id="ai-heading">Not sure what to eat? Just tell us how you feel</h2>
+        <div class="ai-wrap">
+          <span class="ai-coming">Coming Soon</span>
+          <div class="bubble bubble-user">
+            <div class="bubble-label font-mono">You</div>
+            I'm tired but I want something spicy and filling — not rice.
+          </div>
+          <div class="bubble bubble-ai">
+            <div class="bubble-label font-mono">ChowApp</div>
+            <p id="ai-reply-copy" style="margin: 0;">Try pepper soup with goat meat + a side of agidi, or ofe nsala with pounded yam. We don't rank venues by distance until you <strong>verify your location</strong> — then nearest matches surface automatically.</p>
+          </div>
+          <div class="ai-input-row">
+            <input type="text" id="ai-input" placeholder="Describe your mood or craving…" autocomplete="off" />
+            <button type="button" class="btn btn-orange" id="ai-send">Send</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="reveal" id="other-cities" aria-labelledby="cities-heading">
+      <div class="container">
+        <p class="section-label"><span class="section-idx">06</span> · Expansion</p>
+        <h2 class="section-title section-title--lg" id="cities-heading">Coming to your city soon</h2>
+        <p>We're starting in Abuja. Next stops:</p>
+        <div class="city-grid" role="list">
+          <button type="button" class="city-card" data-city="Lagos">
+            <h3>Lagos</h3>
+            <span class="soon">Coming Soon</span>
+          </button>
+          <button type="button" class="city-card" data-city="Enugu">
+            <h3>Enugu</h3>
+            <span class="soon">Coming Soon</span>
+          </button>
+          <button type="button" class="city-card" data-city="Port Harcourt">
+            <h3>Port Harcourt</h3>
+            <span class="soon">Coming Soon</span>
+          </button>
+          <button type="button" class="city-card" data-city="Ibadan">
+            <h3>Ibadan</h3>
+            <span class="soon">Coming Soon</span>
+          </button>
+          <button type="button" class="city-card" data-city="Kano">
+            <h3>Kano</h3>
+            <span class="soon">Coming Soon</span>
+          </button>
+          <button type="button" class="city-card" data-city="Benin City">
+            <h3>Benin City</h3>
+            <span class="soon">Coming Soon</span>
+          </button>
+          <button type="button" class="city-card" data-city="Owerri">
+            <h3>Owerri</h3>
+            <span class="soon">Coming Soon</span>
+          </button>
+          <button type="button" class="city-card" data-city="Kaduna">
+            <h3>Kaduna</h3>
+            <span class="soon">Coming Soon</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="reveal" id="list-restaurant" aria-labelledby="list-heading">
+      <div class="container list-grid">
+        <div>
+          <p class="section-label"><span class="section-idx">07</span> · For owners</p>
+          <h2 class="section-title" id="list-heading">List your restaurant</h2>
+          <p><strong>No website?</strong> You can still get listed: <strong>first year free</strong>, then a simple <strong>subscription</strong> so diners can find your dishes. Chop bars and neighbourhood kitchens welcome.</p>
+          <ul class="perks">
+            <li>No website? First year free, then subscription-based listing</li>
+            <li>Tag your dishes</li>
+            <li>Appear in search</li>
+            <li>Collect reviews</li>
+            <li>Simple dashboard</li>
+          </ul>
+          <button type="button" class="btn btn-orange" id="btn-list-cta">Claim your listing</button>
+        </div>
+        <div class="mini-stats">
+          <div class="mini-stat">
+            <span class="stat-value"><span class="count-up" data-target="1200" data-suffix="+">0</span></span>
+            <span class="stat-label">Restaurants</span>
+          </div>
+          <div class="mini-stat">
+            <span class="stat-value"><span class="count-up" data-target="50" data-suffix="k+">0</span></span>
+            <span class="stat-label">Monthly Searches</span>
+          </div>
+          <div class="mini-stat">
+            <span class="stat-value"><span class="count-up" data-target="20" data-prefix="" data-suffix="">0</span></span>
+            <span class="stat-label">Cities Soon</span>
+          </div>
+          <div class="mini-stat">
+            <span class="stat-value"><span class="count-up" data-target="94" data-suffix="%">0</span></span>
+            <span class="stat-label">Avg Accuracy</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-top">
+      <div class="footer-brand">
+        <p class="logo">Chow<span>App</span></p>
+        <p class="footer-tag">Find the dish. Book the table. Fight for the last piece of meat.</p>
+        <p class="footer-made">Made with in 🇳🇬</p>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h4>Discover</h4>
+          <ul>
+            <li><a href="#browse-dishes">Browse dishes</a></li>
+            <li><a href="#dish-of-the-day">Dish of the day</a></li>
+            <li><a href="#ai-recommend">AI picks</a></li>
+            <li><a href="#">Diet filters</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Restaurants</h4>
+          <ul>
+            <li><a href="#restaurants">Abuja listings</a></li>
+            <li><a href="#list-restaurant">Claim listing</a></li>
+            <li><a href="#">Accuracy programme</a></li>
+            <li><a href="#">Partner support</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Press</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Cities</h4>
+          <ul>
+            <li><a href="#hero">Abuja (live)</a></li>
+            <li><a href="#other-cities">Coming soon</a></li>
+            <li><a href="#">For investors</a></li>
+            <li><a href="#">API</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span id="year"></span> ChowApp. All rights reserved.</span>
+        <span>Built for every Nigerian, everywhere</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var dishInput = document.getElementById("dish-search");
+      var locationSelect = document.getElementById("location-select");
+      var geoHint = document.getElementById("geo-hint");
+      var locBadge = document.getElementById("loc-status-badge");
+      var restPlaceholder = document.getElementById("rest-placeholder");
+      var restGridWrap = document.getElementById("rest-grid-wrap");
+      var restStatus = document.getElementById("restaurants-status");
+      var restHeading = document.getElementById("rest-heading");
+      var aiReply = document.getElementById("ai-reply-copy");
+      /* sessionStorage: demo-only persistence of verified state; clear the site data to reset */
+      var STORAGE_VERIFIED = "chowAppVerified";
+      var STORAGE_LABEL = "chowAppVerifiedLabel";
+
+      var locationVerified = false;
+      var verifiedLabel = "";
+
+      var aiCopyUnverified =
+        'Try pepper soup with goat meat + a side of agidi, or ofe nsala with pounded yam. We don\'t rank venues by distance until you <strong>verify your location</strong> — then nearest matches surface automatically.';
+      var aiCopyVerified =
+        "Try pepper soup with goat meat + a side of agidi, or ofe nsala with pounded yam. <strong>Nearest restaurants (preview)</strong> are sorted from your verified position — full rankings on the results page next.";
+
+      var stateNames = {
+        lagos: "Lagos",
+        enugu: "Enugu",
+        ph: "Port Harcourt",
+        ibadan: "Ibadan",
+        kano: "Kano",
+        benin: "Benin City",
+        owerri: "Owerri",
+        kaduna: "Kaduna"
+      };
+
+      function hideGeoHint() {
+        geoHint.textContent = "";
+        geoHint.classList.remove("is-visible");
+      }
+
+      function showGeoHint(msg) {
+        geoHint.textContent = msg;
+        geoHint.classList.add("is-visible");
+      }
+
+      function applyVerifiedUI(opts) {
+        opts = opts || {};
+        var scroll = !!opts.scroll;
+        locBadge.textContent = "Location verified · " + verifiedLabel;
+        locBadge.classList.add("verified");
+        aiReply.innerHTML = aiCopyVerified;
+        restPlaceholder.hidden = true;
+        restGridWrap.hidden = false;
+        restStatus.textContent =
+          "Nearest restaurants (preview) sorted from your verified position. Full search results — coming soon.";
+        try {
+          sessionStorage.setItem(STORAGE_VERIFIED, "1");
+          sessionStorage.setItem(STORAGE_LABEL, verifiedLabel);
+        } catch (e) {}
+
+        if (scroll) {
+          var smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          document.getElementById("restaurants").scrollIntoView({
+            behavior: smooth ? "smooth" : "auto",
+            block: "start"
+          });
+          setTimeout(function () {
+            restHeading.focus({ preventScroll: true });
+          }, smooth ? 450 : 0);
+        }
+      }
+
+      function setVerified(label, scroll) {
+        locationVerified = true;
+        verifiedLabel = label;
+        hideGeoHint();
+        applyVerifiedUI({ scroll: scroll });
+      }
+
+      if (sessionStorage.getItem(STORAGE_VERIFIED) === "1") {
+        verifiedLabel = sessionStorage.getItem(STORAGE_LABEL) || "Abuja";
+        locationVerified = true;
+        applyVerifiedUI({ scroll: false });
+      }
+
+      document.getElementById("btn-verify-location").addEventListener("click", function () {
+        hideGeoHint();
+        if (!navigator.geolocation) {
+          showGeoHint("Location isn't available in this browser. Use \"I'm in Abuja (no GPS)\" instead.");
+          return;
+        }
+        navigator.geolocation.getCurrentPosition(
+          function () {
+            setVerified("GPS / approx. position", true);
+          },
+          function (err) {
+            var msg =
+              err && err.code === 1
+                ? "Permission denied. You can still confirm Abuja with the button next to this message."
+                : "Couldn't read your position. Try again or use \"I'm in Abuja (no GPS)\".";
+            showGeoHint(msg);
+          },
+          { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 }
+        );
+      });
+
+      document.getElementById("btn-verify-fallback").addEventListener("click", function () {
+        setVerified("Abuja (manual)", true);
+      });
+
+      document.querySelectorAll(".chip[data-fill]").forEach(function (chip) {
+        chip.addEventListener("click", function () {
+          dishInput.value = chip.getAttribute("data-fill");
+          dishInput.focus();
+        });
+      });
+
+      document.getElementById("btn-find-dish").addEventListener("click", function () {
+        if (!locationVerified) {
+          alert("Verify your location first — then you can see nearest restaurants for your search. (Full results page — coming soon!)");
+          return;
+        }
+        alert("Results page coming soon!");
+      });
+
+      document.querySelectorAll(".cat-card[data-category]").forEach(function (card) {
+        card.addEventListener("click", function () {
+          var name = card.getAttribute("data-category");
+          alert("Browsing " + name + " — coming soon!");
+        });
+      });
+
+      document.getElementById("btn-find-onugbu").addEventListener("click", function () {
+        if (!locationVerified) {
+          alert("Verify your location first — then we can show the nearest spots serving ofe onugbu. (Full results page — coming soon!)");
+          return;
+        }
+        alert("Results page coming soon!");
+      });
+
+      document.getElementById("ai-send").addEventListener("click", function () {
+        alert("AI recommendations coming soon!");
+      });
+
+      document.getElementById("ai-input").addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          alert("AI recommendations coming soon!");
+        }
+      });
+
+      locationSelect.addEventListener("change", function () {
+        var v = locationSelect.value;
+        if (v !== "abuja") {
+          var label = stateNames[v] || "This location";
+          alert(label + " — coming soon!");
+          locationSelect.value = "abuja";
+        }
+      });
+
+      document.querySelectorAll(".city-card[data-city]").forEach(function (card) {
+        card.addEventListener("click", function () {
+          alert(card.getAttribute("data-city") + " — coming soon!");
+        });
+      });
+
+      document.getElementById("btn-list-cta").addEventListener("click", function () {
+        alert("Restaurant onboarding — coming soon! No-website tier: first year free, then subscription. Pricing details in dashboard.");
+      });
+
+      document.getElementById("year").textContent = String(new Date().getFullYear());
+
+      (function initReveal() {
+        var motion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        var revealEls = document.querySelectorAll(".reveal:not(.reveal--visible)");
+        if (motion || !("IntersectionObserver" in window)) {
+          revealEls.forEach(function (el) {
+            el.classList.add("reveal--visible");
+          });
+          return;
+        }
+        var revObs = new IntersectionObserver(
+          function (entries, obs) {
+            entries.forEach(function (entry) {
+              if (!entry.isIntersecting) return;
+              entry.target.classList.add("reveal--visible");
+              obs.unobserve(entry.target);
+            });
+          },
+          { threshold: 0.06, rootMargin: "0px 0px -28px 0px" }
+        );
+        revealEls.forEach(function (el) {
+          revObs.observe(el);
+        });
+      })();
+
+      var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      function animateCount(el, target, duration, formatter) {
+        var start = performance.now();
+        function frame(now) {
+          var t = Math.min(1, (now - start) / duration);
+          var eased = 1 - Math.pow(1 - t, 3);
+          var current = Math.round(target * eased);
+          el.textContent = formatter(current);
+          if (t < 1) {
+            requestAnimationFrame(frame);
+          } else {
+            el.textContent = formatter(target);
+          }
+        }
+        requestAnimationFrame(frame);
+      }
+
+      function formatCount(el, n) {
+        var prefix = el.getAttribute("data-prefix") || "";
+        var suffix = el.getAttribute("data-suffix") || "";
+        return prefix + n + suffix;
+      }
+
+      var countElements = document.querySelectorAll(".count-up");
+
+      if ("IntersectionObserver" in window && countElements.length) {
+        var observer = new IntersectionObserver(
+          function (entries, obs) {
+            entries.forEach(function (entry) {
+              if (!entry.isIntersecting) return;
+              var el = entry.target;
+              var target = parseInt(el.getAttribute("data-target"), 10);
+              if (isNaN(target)) return;
+              obs.unobserve(el);
+              var duration = reducedMotion ? 0 : 1200;
+              if (duration === 0) {
+                el.textContent = formatCount(el, target);
+                return;
+              }
+              animateCount(el, target, duration, function (n) {
+                return formatCount(el, n);
+              });
+            });
+          },
+          { threshold: 0.2, rootMargin: "0px" }
+        );
+        countElements.forEach(function (el) {
+          observer.observe(el);
+        });
+      } else {
+        countElements.forEach(function (el) {
+          var target = parseInt(el.getAttribute("data-target"), 10);
+          if (!isNaN(target)) el.textContent = formatCount(el, target);
+        });
+      }
+
+      (function initMobileNav() {
+        var mq = window.matchMedia("(max-width: 639px)");
+        var toggle = document.getElementById("nav-toggle");
+        var shell = document.getElementById("nav-mobile-shell");
+        if (!toggle || !shell) return;
+
+        function setOpen(open) {
+          shell.classList.toggle("is-open", open);
+          toggle.setAttribute("aria-expanded", open ? "true" : "false");
+          toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+        }
+
+        function closeIfMobile() {
+          if (mq.matches) setOpen(false);
+        }
+
+        toggle.addEventListener("click", function () {
+          if (!mq.matches) return;
+          setOpen(!shell.classList.contains("is-open"));
+        });
+
+        shell.querySelectorAll('a[href^="#"]').forEach(function (link) {
+          link.addEventListener("click", closeIfMobile);
+        });
+
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape" && mq.matches) setOpen(false);
+        });
+
+        mq.addEventListener("change", function () {
+          if (!mq.matches) setOpen(false);
+        });
+      })();
+    })();
+  </script>
+</body>
+</html>

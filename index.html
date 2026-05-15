@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ChowApp</title>
+  <title>ChowHere Find Any Nigerian Dish Near You in Abuja</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
@@ -95,7 +95,7 @@
       }
     }
 
-    /* ——— Fixed navbar ——— */
+    /* Fixed navbar */
     .site-header {
       position: sticky;
       top: 0;
@@ -174,6 +174,7 @@
       align-items: center;
       justify-content: center;
       min-height: 44px;
+      height: auto;
       font-family: "DM Sans", sans-serif;
       font-weight: 700;
       font-size: 0.95rem;
@@ -181,6 +182,7 @@
       border: 2px solid var(--dark);
       cursor: pointer;
       transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;
+      white-space: nowrap;
     }
 
     .btn:active {
@@ -210,7 +212,7 @@
       color: var(--cream);
     }
 
-    /* ——— Hero ——— */
+    /* Hero */
     .hero {
       position: relative;
       background: linear-gradient(165deg, var(--green) 0%, var(--green-deep) 55%, #083218 100%);
@@ -340,7 +342,8 @@
     .search-row input[type="text"] {
       flex: 1 1 160px;
       min-width: 0;
-      padding: 0.75rem 1rem;
+      min-height: 44px;
+      padding: 0.65rem 1rem;
       border: 2px solid var(--dark);
       font-family: "DM Sans", sans-serif;
       font-size: 1rem;
@@ -518,7 +521,7 @@
       display: none !important;
     }
 
-    /* ——— Section shells ——— */
+    /* Section shells */
     section {
       padding: var(--section-y-lg) 0;
       border-bottom: 2px solid var(--dark);
@@ -665,35 +668,40 @@
       border: 2px solid rgba(250, 245, 236, 0.5);
     }
 
-    .plate-wrap {
+    .dotd-budget-panel {
+      margin-top: 1rem;
+      padding: 1rem;
+      border: 2px solid rgba(224, 123, 48, 0.2);
+      background: rgba(224, 123, 48, 0.06);
+      border-radius: 0.35rem;
+    }
+
+    .budget-label {
+      display: block;
+      font-family: "Space Mono", monospace;
+      font-size: 0.82rem;
+      margin-bottom: 0.75rem;
+      color: rgba(10, 31, 16, 0.85);
+    }
+
+    .budget-input-row {
       display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
       align-items: center;
-      justify-content: center;
-      min-height: 220px;
-      border: 2px solid var(--cream);
-      outline: 2px solid var(--gold);
-      outline-offset: 6px;
-      background:
-        linear-gradient(145deg, rgba(15, 76, 42, 0.6) 0%, rgba(10, 31, 16, 0.9) 100%);
-      box-shadow: inset 0 0 0 1px rgba(250, 245, 236, 0.12);
+      margin-bottom: 0.75rem;
     }
 
-    .plate {
-      font-size: 5rem;
-      display: inline-block;
-      animation: spin-plate 8s linear infinite;
+    .budget-select {
+      min-width: 170px;
+      padding: 0.75rem 0.85rem;
+      border: 2px solid var(--dark);
+      background: var(--white);
+      font-family: "DM Sans", sans-serif;
+      font-size: 0.95rem;
+      color: var(--dark);
     }
 
-    @keyframes spin-plate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .plate {
-        animation: none;
-      }
-    }
 
     /* How it works */
     #how-it-works {
@@ -751,22 +759,40 @@
 
     .rest-grid {
       display: grid;
-      gap: 0.65rem;
+      gap: 0.75rem;
+      grid-template-columns: 1fr;
     }
 
-    @media (min-width: 768px) {
+    @media (min-width: 900px) {
       .rest-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
       }
     }
 
+    .restaurant-filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      margin: 0 0 var(--space-4);
+      padding: 0.9rem 1rem;
+      border: 2px solid var(--green);
+      background: rgba(26, 92, 58, 0.08);
+    }
+
+    .restaurant-filter-bar span,
+    .restaurant-filter-bar strong {
+      font-family: "Space Mono", monospace;
+      font-size: 0.85rem;
+    }
+
     .rest-card {
-      border: 2px solid var(--dark);
+      border: 2px solid var(--green);
       padding: var(--space-4);
       background: var(--white);
       display: flex;
       flex-direction: column;
-      gap: var(--space-2);
+      gap: var(--space-3);
       box-shadow: var(--shadow-hard-sm);
       transition: transform 0.2s, box-shadow 0.2s;
     }
@@ -776,11 +802,106 @@
       box-shadow: var(--shadow-hard);
     }
 
+    .rest-card-body {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .rest-meta-text {
+      margin: 0;
+      font-family: "Space Mono", monospace;
+      font-size: 0.9rem;
+      color: rgba(10, 31, 16, 0.9);
+    }
+
+    .price-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.35rem 0.75rem;
+      font-family: "Space Mono", monospace;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-radius: 999px;
+      border: 2px solid var(--orange);
+      color: var(--orange);
+      width: fit-content;
+      background: rgba(224, 123, 48, 0.12);
+    }
+
+    .price-budget {
+      border-color: #666;
+      color: #333;
+      background: rgba(10, 31, 16, 0.05);
+    }
+
+    .price-mid {
+      border-color: var(--orange);
+      color: var(--orange);
+      background: rgba(224, 123, 48, 0.12);
+    }
+
+    .price-premium {
+      border-color: var(--green);
+      color: var(--green);
+      background: rgba(26, 92, 58, 0.1);
+    }
+
+    .dish-tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .dish-chip {
+      border: 2px solid var(--orange);
+      background: rgba(224, 123, 48, 0.08);
+      color: var(--dark);
+      font-family: "Space Mono", monospace;
+      font-size: 0.75rem;
+      padding: 0.45rem 0.75rem;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, transform 0.15s;
+    }
+
+    .dish-chip:hover,
+    .dish-chip:focus-visible {
+      background: var(--orange);
+      color: var(--white);
+      outline: none;
+    }
+
+    .dish-chip.active {
+      background: var(--green);
+      color: var(--white);
+      border-color: var(--green);
+    }
+
+    .phone-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: "Space Mono", monospace;
+      font-size: 0.92rem;
+      color: var(--green-deep);
+      border: 2px solid rgba(26, 92, 58, 0.15);
+      padding: 0.75rem 0.85rem;
+      background: rgba(26, 92, 58, 0.06);
+      width: fit-content;
+    }
+
+    .phone-link:hover {
+      background: var(--green);
+      color: var(--cream);
+      border-color: var(--green);
+    }
+
     .rest-head {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
-      gap: 0.5rem;
+      gap: 0.75rem;
       align-items: flex-start;
     }
 
@@ -900,6 +1021,7 @@
 
     .ai-input-row input {
       flex: 1 1 180px;
+      min-height: 44px;
       padding: 0.65rem 0.85rem;
       border: 2px solid var(--dark);
       font-family: "DM Sans", sans-serif;
@@ -1341,7 +1463,7 @@
 
   <header class="site-header">
     <div class="container nav-inner">
-      <a class="logo" href="#"><span class="logo-mark" aria-hidden="true"></span> Chow<span>App</span></a>
+      <a class="logo" href="#"><span class="logo-mark" aria-hidden="true"></span> Chow<span>Here</span></a>
       <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-mobile-shell" aria-label="Open menu">
         <span class="nav-toggle-bar" aria-hidden="true"></span>
         <span class="nav-toggle-bar" aria-hidden="true"></span>
@@ -1371,20 +1493,20 @@
           <div class="hero-copy">
             <p class="tag tag--hero">Nigeria's #1 Food Discovery Platform</p>
             <h1 id="hero-title">Find the exact dish you're craving, right now</h1>
-            <p class="lead">Search 500+ Nigerian dishes and see which Abuja restaurants serve them — verified, accurate, and updated daily. Verify your location so we can show the <strong>nearest</strong> matches sorted by distance.</p>
+            <p class="lead">Search 500+ Nigerian dishes and see which Abuja restaurants serve them. Verified, accurate, and updated daily. Verify your location so we can show the <strong>nearest</strong> matches sorted by distance.</p>
           </div>
           <div class="hero-stats-aside" aria-label="Platform stats">
             <div class="stat-card stat-card--hero">
-              <span class="stat-value"><span class="count-up" data-target="500" data-suffix="+">0</span></span>
-              <span class="stat-label">Dishes</span>
+              <span class="stat-value">Abuja</span>
+              <span class="stat-label">First</span>
             </div>
             <div class="stat-card stat-card--hero">
-              <span class="stat-value"><span class="count-up" data-target="1200" data-suffix="+">0</span></span>
-              <span class="stat-label">Restaurants</span>
+              <span class="stat-value">Coming</span>
+              <span class="stat-label">Launching Soon</span>
             </div>
             <div class="stat-card stat-card--hero">
-              <span class="stat-value"><span class="count-up" data-target="100" data-suffix="%">0</span></span>
-              <span class="stat-label">Abuja Coverage</span>
+              <span class="stat-value">100%</span>
+              <span class="stat-label">Free to Search</span>
             </div>
           </div>
         </div>
@@ -1418,6 +1540,15 @@
             <button type="button" class="btn btn-ghost-hero" id="btn-verify-fallback">I'm in Abuja (no GPS)</button>
           </div>
           <p class="geo-hint font-mono" id="geo-hint" role="status"></p>
+
+          <div style="margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid rgba(250, 245, 236, 0.25);">
+            <p style="margin: 0 0 var(--space-2); font-size: 0.95rem;">No results in your area yet? Get notified when we launch near you.</p>
+            <div style="display: flex; gap: var(--space-2); flex-wrap: wrap;">
+              <input type="email" id="email-notify" placeholder="Enter your email" style="flex: 1 1 200px; min-width: 0; min-height: 44px; padding: 0.65rem 0.85rem; border: 2px solid var(--dark); font-family: 'DM Sans', sans-serif; background: var(--cream);" />
+              <button type="button" class="btn btn-orange" id="btn-notify-me">Notify Me</button>
+            </div>
+            <p id="email-confirm" style="display: none; margin-top: var(--space-2); color: var(--gold); font-size: 0.9rem;">You're on the list. We'll reach out soon!</p>
+          </div>
 
           <div class="chips" role="group" aria-label="Quick searches">
             <button type="button" class="chip" data-fill="Egusi Soup">Egusi Soup</button>
@@ -1477,19 +1608,29 @@
           <p class="section-label section-label--dotd"><span class="section-idx">02</span> · Today</p>
           <span class="badge">Dish of the Day</span>
           <h2 class="section-title" id="dotd-heading">Ofe Onugbu (Bitter Leaf Soup)</h2>
-          <p>A rich, savoury Igbo soup built on blended bitter leaf, cocoa yam (or achebe), assorted meat, and stockfish — hearty, deeply flavoured, and perfect with swallow.</p>
-          <div class="tag-row">
-            <span class="dish-tag">Medium heat</span>
-            <span class="dish-tag">Igbo / South-East</span>
-            <span class="dish-tag">Gluten-free</span>
+          <p id="dotd-copy">A rotating daily menu highlight drawn from the dishes served by Abuja restaurants in the ChowHere database.</p>
+          <div class="tag-row" id="dotd-tag-row">
+            <span class="dish-tag">Daily pick</span>
+            <span class="dish-tag">From Abuja menus</span>
+            <span class="dish-tag">Rotates daily</span>
           </div>
-          <span class="badge badge-gold">South-East Nigeria</span>
+          <span class="badge badge-gold" id="dotd-source-badge">Abuja menus</span>
+          <div class="dotd-budget-panel">
+            <label for="budget-select" class="budget-label">Optional: choose your budget to get a best-food suggestion</label>
+            <div class="budget-input-row">
+              <select id="budget-select" aria-label="Budget" class="budget-select">
+                <option value="">Choose budget</option>
+                <option value="Budget">Budget</option>
+                <option value="Mid">Mid</option>
+                <option value="Premium">Premium</option>
+              </select>
+              <button type="button" class="btn btn-orange" id="btn-budget-suggest">Recommend food</button>
+            </div>
+            <p id="budget-suggestion" class="rest-meta-text">Leave this blank if you just want the daily highlight.</p>
+          </div>
           <p style="margin-top: 1rem;">
             <button type="button" class="btn btn-orange" id="btn-find-onugbu">Find restaurants serving this</button>
           </p>
-        </div>
-        <div class="plate-wrap" aria-hidden="true">
-          <span class="plate">🍽️</span>
         </div>
       </div>
     </section>
@@ -1502,7 +1643,7 @@
           <article class="step-card">
             <p class="step-num">Step 01</p>
             <h3>Search your dish</h3>
-            <p>Type what you're craving — from ofada to okra soup — we match it to real menus.</p>
+            <p>Type what you're craving, from ofada to okra soup, and we match it to real menus.</p>
           </article>
           <article class="step-card">
             <p class="step-num">Step 02</p>
@@ -1512,12 +1653,12 @@
           <article class="step-card">
             <p class="step-num">Step 03</p>
             <h3>See verified results</h3>
-            <p>Nearest matches appear after verification — plus accuracy scores and daily menu checks so you don't arrive disappointed.</p>
+            <p>Nearest matches appear after verification, plus accuracy scores and daily menu checks so you don't arrive disappointed.</p>
           </article>
           <article class="step-card">
             <p class="step-num">Step 04</p>
             <h3>Leave a review</h3>
-            <p>Help the community stay sharp — was the pepper soup worth the drive?</p>
+            <p>Help the community stay sharp. Was the pepper soup worth the drive?</p>
           </article>
         </div>
       </div>
@@ -1527,44 +1668,269 @@
       <div class="container">
         <p class="section-label"><span class="section-idx">04</span> · Featured</p>
         <h2 class="section-title" id="rest-heading" tabindex="-1">Restaurants in Abuja</h2>
-        <p id="restaurants-status" class="rest-status-line" aria-live="polite">Verify your location above to see nearest restaurants sorted from your position.</p>
+        <p id="restaurants-status" class="rest-status-line" aria-live="polite">Showing 13 Abuja restaurants. Tap a dish tag to filter by a popular menu item.</p>
         <p class="rest-meta-line">Neighbourhoods we cover: Wuse 2 · Maitama · Garki · Gwarinpa · Jabi · Utako · Asokoro</p>
-        <div class="rest-placeholder" id="rest-placeholder">
-          <strong>No listings yet</strong> — go to the hero and tap <em>Verify my location</em> or <em>I'm in Abuja (no GPS)</em>. Your nearest picks will appear here.
+        <div class="restaurant-filter-bar" id="restaurant-filter-bar" hidden>
+          <span>Filtering by dish:</span>
+          <strong id="restaurant-filter-active"></strong>
+          <button type="button" class="btn btn-ghost" id="clear-restaurant-filter">Clear filter</button>
         </div>
-        <div class="rest-grid" id="rest-grid-wrap" hidden>
-          <article class="rest-card">
+        <div class="rest-placeholder" id="rest-placeholder" style="display: none;">
+          <strong>No listings yet</strong>. Go to the hero and tap <em>Verify my location</em> or <em>I'm in Abuja (no GPS)</em>. Your nearest picks will appear here.
+        </div>
+        <div class="rest-grid" id="rest-grid-wrap">
+          <article class="rest-card" data-dishes="Egusi Soup,Jollof Rice,Pounded Yam">
             <div class="rest-head">
-              <h3>Mama Titi's Kitchen</h3>
-              <span class="hood">Wuse 2</span>
+              <div>
+                <h3>The Abuja Chop Bar</h3>
+                <span class="hood">Wuse 2</span>
+              </div>
+              <span class="status open">Open today</span>
             </div>
-            <span class="status open">Open Now</span>
-            <p class="rest-dishes">Egusi · Pounded Yam · Ofe Akwu</p>
-            <p class="accuracy"><span class="accuracy-label">Menu match</span> 94%</p>
+            <div class="rest-card-body">
+              <div class="price-pill price-mid">Mid</div>
+              <div class="dish-tag-row">
+                <button type="button" class="dish-chip" data-dish="Egusi Soup">Egusi Soup</button>
+                <button type="button" class="dish-chip" data-dish="Jollof Rice">Jollof Rice</button>
+                <button type="button" class="dish-chip" data-dish="Pounded Yam">Pounded Yam</button>
+              </div>
+              <p class="rest-meta-text">Open 8am to 10pm</p>
+              <a class="phone-link" href="tel:+2347012345678">+234 701 234 5678</a>
+            </div>
           </article>
-          <article class="rest-card">
+          <article class="rest-card" data-dishes="Suya,Kilishi,Pepper Soup">
             <div class="rest-head">
-              <h3>Alhaji Suya Spot</h3>
-              <span class="hood">Maitama</span>
+              <div>
+                <h3>Suya Central Abuja</h3>
+                <span class="hood">Maitama</span>
+              </div>
+              <span class="status open">Open today</span>
             </div>
-            <span class="status open">Open Now</span>
-            <p class="rest-dishes">Suya · Kilishi · Asun</p>
-            <p class="accuracy"><span class="accuracy-label">Menu match</span> 98%</p>
+            <div class="rest-card-body">
+              <div class="price-pill price-budget">Budget</div>
+              <div class="dish-tag-row">
+                <button type="button" class="dish-chip" data-dish="Suya">Suya</button>
+                <button type="button" class="dish-chip" data-dish="Kilishi">Kilishi</button>
+                <button type="button" class="dish-chip" data-dish="Pepper Soup">Pepper Soup</button>
+              </div>
+              <p class="rest-meta-text">Open 3pm to 11pm</p>
+              <a class="phone-link" href="tel:+2348098765432">+234 809 876 5432</a>
+            </div>
           </article>
-          <article class="rest-card">
+          <article class="rest-card" data-dishes="Jollof Rice,Fried Plantain,Chicken Stew">
             <div class="rest-head">
-              <h3>Yellow Chop Bar</h3>
-              <span class="hood">Garki</span>
+              <div>
+                <h3>Jabi Jollof Junction</h3>
+                <span class="hood">Jabi</span>
+              </div>
+              <span class="status open">Open today</span>
             </div>
-            <span class="status">Opens 11am</span>
-            <p class="rest-dishes">Ofe Oha · Ofe Onugbu · Eba</p>
-            <p class="accuracy"><span class="accuracy-label">Menu match</span> 91%</p>
+            <div class="rest-card-body">
+              <div class="price-pill price-budget">Budget</div>
+              <div class="dish-tag-row">
+                <button type="button" class="dish-chip" data-dish="Jollof Rice">Jollof Rice</button>
+                <button type="button" class="dish-chip" data-dish="Fried Plantain">Fried Plantain</button>
+                <button type="button" class="dish-chip" data-dish="Chicken Stew">Chicken Stew</button>
+              </div>
+              <p class="rest-meta-text">Open 10am to 9pm</p>
+              <a class="phone-link" href="tel:+2348033456677">+234 803 345 6677</a>
+            </div>
+          </article>
+          <article class="rest-card" data-dishes="Ofada Rice,Efo Riro,Goat Meat">
+            <div class="rest-head">
+              <div>
+                <h3>Garki Grill House</h3>
+                <span class="hood">Garki</span>
+              </div>
+              <span class="status open">Open today</span>
+            </div>
+            <div class="rest-card-body">
+              <div class="price-pill price-mid">Mid</div>
+              <div class="dish-tag-row">
+                <button type="button" class="dish-chip" data-dish="Ofada Rice">Ofada Rice</button>
+                <button type="button" class="dish-chip" data-dish="Efo Riro">Efo Riro</button>
+                <button type="button" class="dish-chip" data-dish="Goat Meat">Goat Meat</button>
+              </div>
+              <p class="rest-meta-text">Open 11am to 10pm</p>
+              <a class="phone-link" href="tel:+2348055567788">+234 805 556 7788</a>
+            </div>
+          </article>
+          <article class="rest-card" data-dishes="Ofe Onugbu,Fufu,Okra Soup">
+            <div class="rest-head">
+              <div>
+                <h3>Utako Urban Kitchen</h3>
+                <span class="hood">Utako</span>
+              </div>
+              <span class="status open">Open today</span>
+            </div>
+            <div class="rest-card-body">
+              <div class="price-pill price-premium">Premium</div>
+              <div class="dish-tag-row">
+                <button type="button" class="dish-chip" data-dish="Ofe Onugbu">Ofe Onugbu</button>
+                <button type="button" class="dish-chip" data-dish="Fufu">Fufu</button>
+                <button type="button" class="dish-chip" data-dish="Okra Soup">Okra Soup</button>
+              </div>
+              <p class="rest-meta-text">Open 9am to 10pm</p>
+              <a class="phone-link" href="tel:+2348078899001">+234 807 889 9001</a>
+            </div>
+          </article>
+          <article class="rest-card" data-dishes="Edikang Ikong,Pounded Yam,Afang Soup">
+            <div class="rest-head">
+              <div>
+                <h3>Asokoro Eats</h3>
+                <span class="hood">Asokoro</span>
+              </div>
+              <span class="status open">Open today</span>
+            </div>
+            <div class="rest-card-body">
+              <div class="price-pill price-premium">Premium</div>
+              <div class="dish-tag-row">
+                <button type="button" class="dish-chip" data-dish="Edikang Ikong">Edikang Ikong</button>
+                <button type="button" class="dish-chip" data-dish="Pounded Yam">Pounded Yam</button>
+                <button type="button" class="dish-chip" data-dish="Afang Soup">Afang Soup</button>
+              </div>
+              <p class="rest-meta-text">Open 10am to 10pm</p>
+              <a class="phone-link" href="tel:+2347023344556">+234 702 334 4556</a>
+            </div>
+          </article>
+          <article class="rest-card" data-dishes="Ogbono Soup,Eba,Suya">
+            <div class="rest-head">
+              <div>
+                <h3>Wuse 1 Spice Hub</h3>
+                <span class="hood">Wuse 1</span>
+              </div>
+              <span class="status open">Open today</span>
+            </div>
+            <div class="rest-card-body">
+              <div class="price-pill price-budget">Budget</div>
+              <div class="dish-tag-row">
+                <button type="button" class="dish-chip" data-dish="Ogbono Soup">Ogbono Soup</button>
+                <button type="button" class="dish-chip" data-dish="Eba">Eba</button>
+                <button type="button" class="dish-chip" data-dish="Suya">Suya</button>
+              </div>
+              <p class="rest-meta-text">Open 8am to 9pm</p>
+              <a class="phone-link" href="tel:+2348065522110">+234 806 552 2110</a>
+            </div>
+          </article>
+          <article class="rest-card" data-dishes="Banga Soup,Starch,Seafood Okro">
+            <div class="rest-head">
+              <div>
+                <h3>Gwarinpa Garden</h3>
+                <span class="hood">Gwarinpa</span>
+              </div>
+              <span class="status open">Open today</span>
+            </div>
+            <div class="rest-card-body">
+              <div class="price-pill price-mid">Mid</div>
+              <div class="dish-tag-row">
+                <button type="button" class="dish-chip" data-dish="Banga Soup">Banga Soup</button>
+                <button type="button" class="dish-chip" data-dish="Starch">Starch</button>
+                <button type="button" class="dish-chip" data-dish="Seafood Okro">Seafood Okro</button>
+              </div>
+              <p class="rest-meta-text">Open 11am to 11pm</p>
+              <a class="phone-link" href="tel:+2347012233445">+234 701 223 3445</a>
+            </div>
+          </article>
+          <article class="rest-card" data-dishes="Amala,Gbegiri,Ewedu">
+            <div class="rest-head">
+              <div>
+                <h3>Maitama Market Kitchen</h3>
+                <span class="hood">Maitama</span>
+              </div>
+              <span class="status open">Open today</span>
+            </div>
+            <div class="rest-card-body">
+              <div class="price-pill price-mid">Mid</div>
+              <div class="dish-tag-row">
+                <button type="button" class="dish-chip" data-dish="Amala">Amala</button>
+                <button type="button" class="dish-chip" data-dish="Gbegiri">Gbegiri</button>
+                <button type="button" class="dish-chip" data-dish="Ewedu">Ewedu</button>
+              </div>
+              <p class="rest-meta-text">Open 10am to 9:30pm</p>
+              <a class="phone-link" href="tel:+2348076543210">+234 807 654 3210</a>
+            </div>
+          </article>
+          <article class="rest-card" data-dishes="Pepper Soup,Goat Meat,White Rice">
+            <div class="rest-head">
+              <div>
+                <h3>City Bowl Chop Shop</h3>
+                <span class="hood">Central Area</span>
+              </div>
+              <span class="status open">Open today</span>
+            </div>
+            <div class="rest-card-body">
+              <div class="price-pill price-premium">Premium</div>
+              <div class="dish-tag-row">
+                <button type="button" class="dish-chip" data-dish="Pepper Soup">Pepper Soup</button>
+                <button type="button" class="dish-chip" data-dish="Goat Meat">Goat Meat</button>
+                <button type="button" class="dish-chip" data-dish="White Rice">White Rice</button>
+              </div>
+              <p class="rest-meta-text">Open 11am to 10pm</p>
+              <a class="phone-link" href="tel:+2348091122334">+234 809 112 2334</a>
+            </div>
+          </article>
+          <article class="rest-card" data-dishes="Efo Riro,Jollof Rice,Egusi Soup">
+            <div class="rest-head">
+              <div>
+                <h3>Green Leaf Bistro</h3>
+                <span class="hood">Asokoro</span>
+              </div>
+              <span class="status open">Open today</span>
+            </div>
+            <div class="rest-card-body">
+              <div class="price-pill price-mid">Mid</div>
+              <div class="dish-tag-row">
+                <button type="button" class="dish-chip" data-dish="Efo Riro">Efo Riro</button>
+                <button type="button" class="dish-chip" data-dish="Jollof Rice">Jollof Rice</button>
+                <button type="button" class="dish-chip" data-dish="Egusi Soup">Egusi Soup</button>
+              </div>
+              <p class="rest-meta-text">Open 9am to 10pm</p>
+              <a class="phone-link" href="tel:+2348079988776">+234 807 998 8776</a>
+            </div>
+          </article>
+          <article class="rest-card" data-dishes="Okra Soup,Pepper Soup,Catfish Stew">
+            <div class="rest-head">
+              <div>
+                <h3>Palm & Pepper Kitchen</h3>
+                <span class="hood">Jabi</span>
+              </div>
+              <span class="status open">Open today</span>
+            </div>
+            <div class="rest-card-body">
+              <div class="price-pill price-mid">Mid</div>
+              <div class="dish-tag-row">
+                <button type="button" class="dish-chip" data-dish="Okra Soup">Okra Soup</button>
+                <button type="button" class="dish-chip" data-dish="Pepper Soup">Pepper Soup</button>
+                <button type="button" class="dish-chip" data-dish="Catfish Stew">Catfish Stew</button>
+              </div>
+              <p class="rest-meta-text">Open 10am to 10pm</p>
+              <a class="phone-link" href="tel:+2348031122445">+234 803 112 2445</a>
+            </div>
+          </article>
+          <article class="rest-card" data-dishes="Suya,Kilishi,Asun">
+            <div class="rest-head">
+              <div>
+                <h3>Bello's Suya & More</h3>
+                <span class="hood">Garki</span>
+              </div>
+              <span class="status open">Open today</span>
+            </div>
+            <div class="rest-card-body">
+              <div class="price-pill price-budget">Budget</div>
+              <div class="dish-tag-row">
+                <button type="button" class="dish-chip" data-dish="Suya">Suya</button>
+                <button type="button" class="dish-chip" data-dish="Kilishi">Kilishi</button>
+                <button type="button" class="dish-chip" data-dish="Asun">Asun</button>
+              </div>
+              <p class="rest-meta-text">Open 12pm to 11pm</p>
+              <a class="phone-link" href="tel:+2348056677889">+234 805 667 7889</a>
+            </div>
           </article>
         </div>
       </div>
     </section>
 
-    <section class="reveal" id="ai-recommend" aria-labelledby="ai-heading">
+    <section class="reveal" id="ai-recommend" aria-labelledby="ai-heading" style="display: none;">
       <div class="container">
         <p class="section-label"><span class="section-idx">05</span> · Smart picks</p>
         <h2 class="section-title" id="ai-heading">Not sure what to eat? Just tell us how you feel</h2>
@@ -1572,11 +1938,11 @@
           <span class="ai-coming">Coming Soon</span>
           <div class="bubble bubble-user">
             <div class="bubble-label font-mono">You</div>
-            I'm tired but I want something spicy and filling — not rice.
+            I'm tired but I want something spicy and filling, not rice.
           </div>
           <div class="bubble bubble-ai">
-            <div class="bubble-label font-mono">ChowApp</div>
-            <p id="ai-reply-copy" style="margin: 0;">Try pepper soup with goat meat + a side of agidi, or ofe nsala with pounded yam. We don't rank venues by distance until you <strong>verify your location</strong> — then nearest matches surface automatically.</p>
+            <div class="bubble-label font-mono">ChowHere</div>
+            <p id="ai-reply-copy" style="margin: 0;">Try pepper soup with goat meat + a side of agidi, or ofe nsala with pounded yam. We don't rank venues by distance until you <strong>verify your location</strong>. Then nearest matches surface automatically.</p>
           </div>
           <div class="ai-input-row">
             <input type="text" id="ai-input" placeholder="Describe your mood or craving…" autocomplete="off" />
@@ -1635,7 +2001,7 @@
           <h2 class="section-title" id="list-heading">List your restaurant</h2>
           <p><strong>No website?</strong> You can still get listed: <strong>first year free</strong>, then a simple <strong>subscription</strong> so diners can find your dishes. Chop bars and neighbourhood kitchens welcome.</p>
           <ul class="perks">
-            <li>No website? First year free, then subscription-based listing</li>
+            <li>No website? First year free, then a subscription listing</li>
             <li>Tag your dishes</li>
             <li>Appear in search</li>
             <li>Collect reviews</li>
@@ -1645,20 +2011,20 @@
         </div>
         <div class="mini-stats">
           <div class="mini-stat">
-            <span class="stat-value"><span class="count-up" data-target="1200" data-suffix="+">0</span></span>
-            <span class="stat-label">Restaurants</span>
+            <span class="stat-value">Abuja</span>
+            <span class="stat-label">Open Now</span>
           </div>
           <div class="mini-stat">
-            <span class="stat-value"><span class="count-up" data-target="50" data-suffix="k+">0</span></span>
-            <span class="stat-label">Monthly Searches</span>
+            <span class="stat-value">First</span>
+            <span class="stat-label">Year Free</span>
           </div>
           <div class="mini-stat">
-            <span class="stat-value"><span class="count-up" data-target="20" data-prefix="" data-suffix="">0</span></span>
-            <span class="stat-label">Cities Soon</span>
+            <span class="stat-value">More</span>
+            <span class="stat-label">Cities Coming</span>
           </div>
           <div class="mini-stat">
-            <span class="stat-value"><span class="count-up" data-target="94" data-suffix="%">0</span></span>
-            <span class="stat-label">Avg Accuracy</span>
+            <span class="stat-value">Dish</span>
+            <span class="stat-label">Level Search</span>
           </div>
         </div>
       </div>
@@ -1668,7 +2034,7 @@
   <footer class="site-footer">
     <div class="container footer-top">
       <div class="footer-brand">
-        <p class="logo">Chow<span>App</span></p>
+        <p class="logo">Chow<span>Here</span></p>
         <p class="footer-tag">Find the dish. Book the table. Fight for the last piece of meat.</p>
         <p class="footer-made">Made with in 🇳🇬</p>
       </div>
@@ -1711,7 +2077,7 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <span>© <span id="year"></span> ChowApp. All rights reserved.</span>
+        <span>© <span id="year"></span> ChowHere. All rights reserved.</span>
         <span>Built for every Nigerian, everywhere</span>
       </div>
     </div>
@@ -1729,16 +2095,16 @@
       var restHeading = document.getElementById("rest-heading");
       var aiReply = document.getElementById("ai-reply-copy");
       /* sessionStorage: demo-only persistence of verified state; clear the site data to reset */
-      var STORAGE_VERIFIED = "chowAppVerified";
-      var STORAGE_LABEL = "chowAppVerifiedLabel";
+      var STORAGE_VERIFIED = "chowHereVerified";
+      var STORAGE_LABEL = "chowHereVerifiedLabel";
 
       var locationVerified = false;
       var verifiedLabel = "";
 
       var aiCopyUnverified =
-        'Try pepper soup with goat meat + a side of agidi, or ofe nsala with pounded yam. We don\'t rank venues by distance until you <strong>verify your location</strong> — then nearest matches surface automatically.';
+        'Try pepper soup with goat meat + a side of agidi, or ofe nsala with pounded yam. We don\'t rank venues by distance until you <strong>verify your location</strong>. Then nearest matches surface automatically.';
       var aiCopyVerified =
-        "Try pepper soup with goat meat + a side of agidi, or ofe nsala with pounded yam. <strong>Nearest restaurants (preview)</strong> are sorted from your verified position — full rankings on the results page next.";
+        "Try pepper soup with goat meat + a side of agidi, or ofe nsala with pounded yam. <strong>Nearest restaurants (preview)</strong> are sorted from your verified position. Full rankings on the results page next.";
 
       var stateNames = {
         lagos: "Lagos",
@@ -1770,7 +2136,7 @@
         restPlaceholder.hidden = true;
         restGridWrap.hidden = false;
         restStatus.textContent =
-          "Nearest restaurants (preview) sorted from your verified position. Full search results — coming soon.";
+          "Nearest restaurants (preview) sorted from your verified position. Full search results coming soon.";
         try {
           sessionStorage.setItem(STORAGE_VERIFIED, "1");
           sessionStorage.setItem(STORAGE_LABEL, verifiedLabel);
@@ -1835,7 +2201,7 @@
 
       document.getElementById("btn-find-dish").addEventListener("click", function () {
         if (!locationVerified) {
-          alert("Verify your location first — then you can see nearest restaurants for your search. (Full results page — coming soon!)");
+          alert("Verify your location first. Then you can see nearest restaurants for your search. (Full results page coming soon!)");
           return;
         }
         alert("Results page coming soon!");
@@ -1844,16 +2210,31 @@
       document.querySelectorAll(".cat-card[data-category]").forEach(function (card) {
         card.addEventListener("click", function () {
           var name = card.getAttribute("data-category");
-          alert("Browsing " + name + " — coming soon!");
+          alert("Browsing " + name + " coming soon!");
         });
       });
 
       document.getElementById("btn-find-onugbu").addEventListener("click", function () {
         if (!locationVerified) {
-          alert("Verify your location first — then we can show the nearest spots serving ofe onugbu. (Full results page — coming soon!)");
+          alert("Verify your location first. Then we can show the nearest spots serving the daily highlight. (Full results page coming soon!)");
+          return;
+        }
+        if (currentDotdDish) {
+          applyRestaurantFilter(currentDotdDish);
+          document.getElementById("restaurant-filter-active").textContent = currentDotdDish;
+          restaurantFilterBar.hidden = false;
           return;
         }
         alert("Results page coming soon!");
+      });
+
+      document.getElementById("btn-budget-suggest").addEventListener("click", function () {
+        var budget = document.getElementById("budget-select").value;
+        if (!budget) {
+          document.getElementById("budget-suggestion").textContent = "Choose a budget above to receive a food recommendation from Abuja menus.";
+          return;
+        }
+        suggestBudgetDish(budget);
       });
 
       document.getElementById("ai-send").addEventListener("click", function () {
@@ -1871,19 +2252,38 @@
         var v = locationSelect.value;
         if (v !== "abuja") {
           var label = stateNames[v] || "This location";
-          alert(label + " — coming soon!");
+          alert(label + " coming soon!");
           locationSelect.value = "abuja";
         }
       });
 
       document.querySelectorAll(".city-card[data-city]").forEach(function (card) {
         card.addEventListener("click", function () {
-          alert(card.getAttribute("data-city") + " — coming soon!");
+          alert(card.getAttribute("data-city") + " coming soon!");
         });
       });
 
       document.getElementById("btn-list-cta").addEventListener("click", function () {
-        alert("Restaurant onboarding — coming soon! No-website tier: first year free, then subscription. Pricing details in dashboard.");
+        alert("Restaurant onboarding coming soon! No website tier: first year free, then subscription. Pricing details in dashboard.");
+      });
+
+      document.getElementById("btn-notify-me").addEventListener("click", function () {
+        var emailInput = document.getElementById("email-notify");
+        var confirmMsg = document.getElementById("email-confirm");
+        if (emailInput.value.trim()) {
+          emailInput.style.display = "none";
+          document.getElementById("btn-notify-me").style.display = "none";
+          confirmMsg.style.display = "block";
+        } else {
+          alert("Please enter a valid email address.");
+        }
+      });
+
+      document.getElementById("email-notify").addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          document.getElementById("btn-notify-me").click();
+        }
       });
 
       document.getElementById("year").textContent = String(new Date().getFullYear());
@@ -2002,6 +2402,138 @@
           if (!mq.matches) setOpen(false);
         });
       })();
+
+      var restaurantCards = Array.from(document.querySelectorAll("#rest-grid-wrap .rest-card"));
+      var restaurantFilterBar = document.getElementById("restaurant-filter-bar");
+      var restaurantFilterActive = document.getElementById("restaurant-filter-active");
+      var currentDotdDish = null;
+      var dotdHeading = document.getElementById("dotd-heading");
+      var dotdCopy = document.getElementById("dotd-copy");
+      var dotdTagRow = document.getElementById("dotd-tag-row");
+      var dotdSourceBadge = document.getElementById("dotd-source-badge");
+      var budgetSuggestion = document.getElementById("budget-suggestion");
+
+      function getUniqueDishes() {
+        var dishes = [];
+        restaurantCards.forEach(function (card) {
+          card.dataset.dishes.split(",").forEach(function (dish) {
+            var name = dish.trim();
+            if (name && dishes.indexOf(name) === -1) dishes.push(name);
+          });
+        });
+        return dishes;
+      }
+
+      function getRestaurantsForDish(dish) {
+        return restaurantCards.filter(function (card) {
+          return card.dataset.dishes.split(",").some(function (menuDish) {
+            return menuDish.trim().toLowerCase() === dish.toLowerCase();
+          });
+        });
+      }
+
+      function chooseDishForToday(dishes) {
+        if (!dishes.length) return "Ofe Onugbu";
+        var dateKey = new Date().toISOString().slice(0, 10);
+        var hash = 0;
+        for (var i = 0; i < dateKey.length; i += 1) {
+          hash = (hash * 31 + dateKey.charCodeAt(i)) >>> 0;
+        }
+        return dishes[hash % dishes.length];
+      }
+
+      function updateDishOfTheDay() {
+        var uniqueDishes = getUniqueDishes();
+        currentDotdDish = chooseDishForToday(uniqueDishes);
+        var dishRestaurants = getRestaurantsForDish(currentDotdDish);
+        var sourceName = dishRestaurants.length ? dishRestaurants[0].querySelector("h3").textContent : "local Abuja chefs";
+        dotdHeading.textContent = currentDotdDish;
+        dotdCopy.textContent = "A rotating daily pick sourced from real Abuja restaurant menus. Today's highlight comes from " + sourceName + ".";
+        dotdTagRow.innerHTML = "<span class=\"dish-tag\">Daily pick</span>" +
+          "<span class=\"dish-tag\">" + sourceName + "</span>" +
+          "<span class=\"dish-tag\">" + dishRestaurants.length + " venues</span>";
+        dotdSourceBadge.textContent = "Based on Abuja menus";
+        budgetSuggestion.textContent = "Select a budget to get a tailored dish recommendation.";
+      }
+
+      updateDishOfTheDay();
+
+      function suggestBudgetDish(budget) {
+        var tally = {};
+        restaurantCards.forEach(function (card) {
+          if (!card.querySelector(".price-" + budget.toLowerCase())) return;
+          card.dataset.dishes.split(",").forEach(function (dish) {
+            var name = dish.trim();
+            if (!name) return;
+            tally[name] = (tally[name] || 0) + 1;
+          });
+        });
+        var best = Object.keys(tally).sort(function (a, b) {
+          return tally[b] - tally[a];
+        })[0];
+        if (!best) {
+          budgetSuggestion.textContent = "No matches found for that budget yet. Try another option.";
+          return;
+        }
+        var venues = getRestaurantsForDish(best).slice(0, 2).map(function (card) {
+          return card.querySelector("h3").textContent;
+        });
+        budgetSuggestion.textContent = "Best for " + budget + ": " + best + ". Served at " + venues.join(" and ") + ".";
+      }
+
+      function refreshRestaurantFilter(dish) {
+        var visibleCards = restaurantCards.filter(function (card) {
+          return card.style.display !== "none";
+        }).length;
+        if (dish) {
+          restaurantFilterBar.hidden = false;
+          restaurantFilterActive.textContent = dish;
+          restStatus.textContent = "Showing " + visibleCards + " restaurants serving " + dish + ".";
+        } else {
+          restaurantFilterBar.hidden = true;
+          restaurantFilterActive.textContent = "";
+          restStatus.textContent = "Showing 13 Abuja restaurants. Tap a dish tag to filter by a popular menu item.";
+        }
+      }
+
+      function clearRestaurantFilter() {
+        restaurantCards.forEach(function (card) {
+          card.style.display = "";
+        });
+        document.querySelectorAll(".dish-chip.active").forEach(function (chip) {
+          chip.classList.remove("active");
+        });
+        refreshRestaurantFilter(null);
+      }
+
+      function applyRestaurantFilter(dish) {
+        restaurantCards.forEach(function (card) {
+          var dishes = card.dataset.dishes.split(",").map(function (value) {
+            return value.trim().toLowerCase();
+          });
+          var visible = dishes.indexOf(dish.toLowerCase()) !== -1;
+          card.style.display = visible ? "" : "none";
+        });
+        document.querySelectorAll(".dish-chip.active").forEach(function (chip) {
+          chip.classList.remove("active");
+        });
+        document.querySelectorAll('.dish-chip[data-dish="' + dish.replace(/"/g, '\\"') + '"]').forEach(function (chip) {
+          chip.classList.add("active");
+        });
+        refreshRestaurantFilter(dish);
+      }
+
+      document.getElementById("rest-grid-wrap").addEventListener("click", function (event) {
+        var chip = event.target.closest(".dish-chip");
+        if (!chip) return;
+        applyRestaurantFilter(chip.dataset.dish);
+      });
+
+      document.getElementById("clear-restaurant-filter").addEventListener("click", function () {
+        clearRestaurantFilter();
+      });
+
+      refreshRestaurantFilter(null);
     })();
   </script>
 </body>

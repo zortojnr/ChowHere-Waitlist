@@ -306,6 +306,28 @@ const landingCSS = `
   #area-select-wrap select { appearance: none; -webkit-appearance: none; font-family: var(--font-mono); font-size: 0.8125rem; font-weight: 600; min-height: 44px; padding: 0.7rem 2.25rem 0.7rem 0.875rem; border: 1.5px solid rgba(10,31,16,0.16); border-radius: var(--radius-md); background-color: var(--cream); color: var(--dark); cursor: pointer; width: 100%; max-width: 320px; background-image: linear-gradient(45deg, transparent 50%, var(--dark) 50%), linear-gradient(135deg, var(--dark) 50%, transparent 50%); background-position: calc(100% - 14px) calc(50% + 3px), calc(100% - 9px) calc(50% + 3px); background-size: 5px 5px; background-repeat: no-repeat; outline: none; transition: border-color 0.15s; }
   #area-select-wrap select:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(15,76,42,0.1); }
   #area-select-wrap p { font-size: 0.8125rem; font-weight: 500; margin: 0 0 0.5rem; color: rgba(10,31,16,0.7); }
+
+  /* ── PROXIMITY POPUP ── */
+  .proximity-overlay { position: fixed; inset: 0; z-index: 3000; background: rgba(7,15,10,0.62); display: flex; align-items: center; justify-content: center; padding: 1.25rem; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); opacity: 0; pointer-events: none; transition: opacity 0.25s cubic-bezier(0.22,1,0.36,1); }
+  .proximity-overlay.is-open { opacity: 1; pointer-events: all; }
+  .proximity-modal { background: var(--white); border: 1px solid rgba(10,31,16,0.1); border-radius: var(--radius-xl); box-shadow: 0 24px 64px rgba(10,31,16,0.18), 0 4px 12px rgba(10,31,16,0.1); max-width: 420px; width: 100%; overflow: hidden; transform: translateY(1.5rem) scale(0.97); transition: transform 0.3s cubic-bezier(0.22,1,0.36,1); }
+  .proximity-overlay.is-open .proximity-modal { transform: translateY(0) scale(1); }
+  .proximity-modal-header { background: linear-gradient(135deg, var(--green) 0%, var(--green-deep) 100%); color: var(--cream); padding: 1.5rem 1.5rem 1.25rem; position: relative; }
+  .proximity-modal-header .prox-icon { font-size: 1.75rem; line-height: 1; margin-bottom: 0.5rem; display: block; }
+  .proximity-modal-header h3 { font-family: var(--font-serif); font-size: 1.2rem; font-weight: 900; color: var(--cream); margin: 0 0 0.25rem; letter-spacing: -0.02em; }
+  .proximity-modal-header p { font-size: 0.875rem; opacity: 0.88; margin: 0; line-height: 1.55; }
+  .prox-close { position: absolute; top: 0.875rem; right: 0.875rem; background: rgba(250,245,236,0.15); border: 1px solid rgba(250,245,236,0.25); color: var(--cream); width: 32px; height: 32px; border-radius: var(--radius-pill); cursor: pointer; font-size: 1rem; line-height: 1; display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
+  .prox-close:hover { background: rgba(250,245,236,0.28); }
+  .proximity-modal-body { padding: 1.375rem 1.5rem 1.5rem; }
+  .prox-distance-badge { display: inline-flex; align-items: center; gap: 0.4rem; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 0.35rem 0.75rem; border-radius: var(--radius-pill); background: rgba(201,162,39,0.12); border: 1.5px solid var(--gold); color: #7a5e00; margin-bottom: 1rem; }
+  .prox-suggestion-list { list-style: none; margin: 0 0 1.25rem; padding: 0; display: grid; gap: 0.5rem; }
+  .prox-suggestion-item { border: 1px solid rgba(10,31,16,0.1); border-radius: var(--radius-md); padding: 0.875rem 1rem; display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; background: var(--cream); }
+  .prox-suggestion-item .prox-area-name { font-family: var(--font-sans); font-weight: 700; font-size: 0.9375rem; color: var(--dark); }
+  .prox-suggestion-item .prox-area-meta { font-family: var(--font-mono); font-size: 0.6875rem; color: rgba(10,31,16,0.6); margin-top: 0.1rem; }
+  .prox-suggestion-item .prox-area-dist { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; color: var(--green); white-space: nowrap; }
+  .prox-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .prox-actions .btn { min-height: 40px; font-size: 0.875rem; flex: 1 1 auto; }
+  @media (prefers-reduced-motion: reduce) { .proximity-overlay, .proximity-modal { transition: none; } }
 `;
 
 var _landingScriptsInit = false;
@@ -330,9 +352,105 @@ function initLandingScripts() {
   var STORAGE_AREA = "chowHereVerifiedArea";
   var verifiedArea = "";
   var verifiedStatus = "";
+  var userLat = null;
+  var userLon = null;
   var areaSelectWrap = document.getElementById("area-select-wrap");
   var verifyRow = document.getElementById("location-verify-row");
   var btnChangeLocation = document.getElementById("btn-change-location");
+
+  /* Approximate centre coordinates for each covered area (Abuja) */
+  var AREA_COORDS = {
+    "Wuse 2":    { lat: 9.0765, lon: 7.4891 },
+    "Maitama":   { lat: 9.0840, lon: 7.4960 },
+    "Garki":     { lat: 9.0544, lon: 7.4779 },
+    "Area 11":   { lat: 9.0572, lon: 7.4897 },
+    "Gwarinpa":  { lat: 9.1094, lon: 7.4228 },
+    "Utako":     { lat: 9.0733, lon: 7.4678 },
+    "Asokoro":   { lat: 9.0417, lon: 7.5108 },
+    "Mabushi":   { lat: 9.0804, lon: 7.4600 },
+    "Jabi":      { lat: 9.0790, lon: 7.4370 },
+    "Kado":      { lat: 9.0900, lon: 7.4550 },
+    "Life Camp": { lat: 9.1000, lon: 7.3950 },
+    "Kubwa":     { lat: 9.1560, lon: 7.3490 },
+  };
+
+  function haversineKm(lat1, lon1, lat2, lon2) {
+    var R = 6371;
+    var dLat = (lat2 - lat1) * Math.PI / 180;
+    var dLon = (lon2 - lon1) * Math.PI / 180;
+    var a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2);
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  }
+
+  function getAreaRestaurantCount(area) {
+    return Array.from(document.querySelectorAll("#rest-grid-wrap .rest-card")).filter(function(c){ return c.dataset.area === area; }).length;
+  }
+
+  function showProximityPopup(area, status) {
+    var overlay = document.getElementById("proximity-overlay");
+    if (!overlay) return;
+    var titleEl = document.getElementById("prox-title");
+    var subtitleEl = document.getElementById("prox-subtitle");
+    var distBadgeEl = document.getElementById("prox-distance-badge");
+    var listEl = document.getElementById("prox-suggestion-list");
+    var btnViewEl = document.getElementById("prox-btn-view");
+
+    /* Build sorted nearest areas with restaurant counts */
+    var nearby = COVERED_AREAS.map(function(a) {
+      var coords = AREA_COORDS[a];
+      var dist = (userLat !== null && coords) ? haversineKm(userLat, userLon, coords.lat, coords.lon) : null;
+      var count = getAreaRestaurantCount(a);
+      return { area: a, dist: dist, count: count };
+    }).filter(function(x){ return x.count > 0; }).sort(function(a, b){
+      if (a.dist === null) return 1;
+      if (b.dist === null) return -1;
+      return a.dist - b.dist;
+    });
+
+    var top3 = nearby.slice(0, 3);
+    var closest = top3[0];
+
+    if (status === "outside") {
+      titleEl.textContent = "You're outside Abuja";
+      subtitleEl.textContent = "We don't yet have verified listings in your current location. Here are our nearest active areas in Abuja — we're expanding soon.";
+    } else {
+      titleEl.textContent = "No verified listings near you yet";
+      subtitleEl.textContent = "We haven't partnered with restaurants in your exact neighbourhood yet. Here are the closest areas where verified spots are already live.";
+    }
+
+    if (closest && closest.dist !== null) {
+      distBadgeEl.textContent = "Nearest active area: " + (closest.dist < 1 ? "< 1 km away" : closest.dist.toFixed(1) + " km away");
+      distBadgeEl.style.display = "inline-flex";
+    } else {
+      distBadgeEl.style.display = "none";
+    }
+
+    listEl.innerHTML = "";
+    top3.forEach(function(item) {
+      var li = document.createElement("li");
+      li.className = "prox-suggestion-item";
+      var distText = (item.dist !== null) ? item.dist.toFixed(1) + " km" : "Abuja";
+      li.innerHTML = '<div><div class="prox-area-name">' + item.area + '</div><div class="prox-area-meta">' + item.count + ' restaurant' + (item.count !== 1 ? 's' : '') + ' verified</div></div><div class="prox-area-dist">' + distText + '</div>';
+      listEl.appendChild(li);
+    });
+
+    if (btnViewEl && closest) {
+      btnViewEl.onclick = function() {
+        closeProximityPopup();
+        setVerified(closest.area, "covered", true);
+      };
+      btnViewEl.textContent = closest ? "Show results in " + closest.area : "Browse all results";
+    }
+
+    overlay.classList.add("is-open");
+    overlay.setAttribute("aria-hidden", "false");
+    document.getElementById("prox-close").focus();
+  }
+
+  function closeProximityPopup() {
+    var overlay = document.getElementById("proximity-overlay");
+    if (overlay) { overlay.classList.remove("is-open"); overlay.setAttribute("aria-hidden", "true"); }
+  }
 
   var aiCopyVerified = "Try pepper soup with goat meat + a side of agidi, or ofe nsala with pounded yam. <strong>Nearest restaurants (preview)</strong> are sorted from your verified position. Full rankings on the results page next.";
 
@@ -505,12 +623,20 @@ function initLandingScripts() {
         hideGeoHint();
         var lat = pos.coords.latitude;
         var lon = pos.coords.longitude;
+        userLat = lat;
+        userLon = lon;
         fetch("https://nominatim.openstreetmap.org/reverse?lat=" + lat + "&lon=" + lon + "&format=json", { headers: { "Accept-Language": "en" } })
           .then(function(r) { return r.json(); })
           .then(function(data) {
             var addr = data.address || {};
             var result = matchArea(addr);
             setVerified(result.area, result.status, true);
+            if (result.status !== "covered") {
+              setTimeout(function() { showProximityPopup(result.area, result.status); }, 600);
+            } else {
+              var count = getAreaRestaurantCount(result.area);
+              if (count === 0) setTimeout(function() { showProximityPopup(result.area, result.status); }, 600);
+            }
           })
           .catch(function() { showManualDropdown("Location lookup failed — please select your area"); });
       },
@@ -526,6 +652,10 @@ function initLandingScripts() {
   });
 
   document.getElementById("btn-verify-fallback").addEventListener("click", function () { showManualDropdown(""); });
+
+  document.getElementById("prox-close").addEventListener("click", closeProximityPopup);
+  document.getElementById("proximity-overlay").addEventListener("click", function(e) { if (e.target === this) closeProximityPopup(); });
+  document.addEventListener("keydown", function(e) { if (e.key === "Escape" && document.getElementById("proximity-overlay").classList.contains("is-open")) closeProximityPopup(); });
 
   document.querySelectorAll(".chip[data-fill]").forEach(function (chip) {
     chip.addEventListener("click", function () { dishInput.value = chip.getAttribute("data-fill"); dishInput.focus(); });
@@ -1048,6 +1178,29 @@ export default function LandingPage() {
           </div>
         </section>
       </main>
+
+      {/* Proximity popup — shown when GPS area has no listings */}
+      <div id="proximity-overlay" className="proximity-overlay" role="dialog" aria-modal="true" aria-labelledby="prox-title" aria-hidden="true">
+        <div className="proximity-modal">
+          <div className="proximity-modal-header">
+            <span className="prox-icon" aria-hidden="true">📍</span>
+            <button type="button" className="prox-close" id="prox-close" aria-label="Close">✕</button>
+            <h3 id="prox-title">No verified listings near you yet</h3>
+            <p id="prox-subtitle">We haven't partnered with restaurants in your exact neighbourhood yet. Here are the closest areas where verified spots are already live.</p>
+          </div>
+          <div className="proximity-modal-body">
+            <div className="prox-distance-badge" id="prox-distance-badge"></div>
+            <ul className="prox-suggestion-list" id="prox-suggestion-list" aria-label="Nearest active areas"></ul>
+            <div className="prox-actions">
+              <button type="button" className="btn btn-orange" id="prox-btn-view">Show nearest results</button>
+              <button type="button" className="btn btn-ghost" onClick={() => {
+                document.getElementById("proximity-overlay").classList.remove("is-open");
+                document.getElementById("proximity-overlay").setAttribute("aria-hidden", "true");
+              }}>Browse all Abuja</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <footer className="site-footer">
         <div className="container footer-top">

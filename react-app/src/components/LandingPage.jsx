@@ -267,6 +267,13 @@ const landingCSS = `
   @media (min-width: 481px) and (max-width: 639px) {
     .search-row .btn.btn-orange { flex: 1 1 auto; min-width: 8rem; }
   }
+
+  .loc-status-badge.verified { background: #1A5C3A; border-color: #1A5C3A; color: #fff; }
+  .loc-status-badge.outside { border-color: #E8621A; color: #E8621A; background: rgba(232,98,26,0.08); }
+  .btn-change-location { font-family: "Space Mono", monospace; font-size: 0.68rem; background: none; border: none; color: var(--orange); cursor: pointer; padding: 0; text-decoration: underline; line-height: 1; }
+  #area-select-wrap { margin-top: 0.5rem; }
+  #area-select-wrap select { appearance: none; -webkit-appearance: none; font-family: "Space Mono", monospace; font-size: 0.8rem; font-weight: 700; padding: 0.75rem 2.25rem 0.75rem 0.85rem; border: 1px solid rgba(10,31,16,0.2); border-radius: 1rem; background: var(--white); color: var(--dark); cursor: pointer; width: 100%; max-width: 320px; background-image: linear-gradient(45deg, transparent 50%, var(--dark) 50%), linear-gradient(135deg, var(--dark) 50%, transparent 50%); background-position: calc(100% - 14px) calc(50% + 3px), calc(100% - 9px) calc(50% + 3px); background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; }
+  #area-select-wrap p { font-size: 0.85rem; margin: 0 0 0.5rem; color: var(--dark); opacity: 0.9; }
 `;
 
 function initLandingScripts() {
@@ -284,7 +291,14 @@ function initLandingScripts() {
   var locationVerified = false;
   var verifiedLabel = "";
 
-  var aiCopyUnverified = 'Try pepper soup with goat meat + a side of agidi, or ofe nsala with pounded yam. We don\'t rank venues by distance until you <strong>verify your location</strong>. Then nearest matches surface automatically.';
+  var COVERED_AREAS = ["Wuse 2","Maitama","Garki","Area 11","Gwarinpa","Utako","Asokoro","Mabushi","Jabi","Kado","Life Camp","Kubwa"];
+  var STORAGE_AREA = "chowHereVerifiedArea";
+  var verifiedArea = "";
+  var verifiedStatus = "";
+  var areaSelectWrap = document.getElementById("area-select-wrap");
+  var verifyRow = document.getElementById("location-verify-row");
+  var btnChangeLocation = document.getElementById("btn-change-location");
+
   var aiCopyVerified = "Try pepper soup with goat meat + a side of agidi, or ofe nsala with pounded yam. <strong>Nearest restaurants (preview)</strong> are sorted from your verified position. Full rankings on the results page next.";
 
   var stateNames = { lagos: "Lagos", enugu: "Enugu", ph: "Port Harcourt", ibadan: "Ibadan", kano: "Kano", benin: "Benin City", owerri: "Owerri", kaduna: "Kaduna" };
@@ -292,16 +306,67 @@ function initLandingScripts() {
   function hideGeoHint() { geoHint.textContent = ""; geoHint.classList.remove("is-visible"); }
   function showGeoHint(msg) { geoHint.textContent = msg; geoHint.classList.add("is-visible"); }
 
+  function normalise(s) { return s.toLowerCase().replace(/[^a-z0-9\s]/g, "").trim(); }
+
+  function matchArea(address) {
+    var candidates = [address.suburb, address.city_district, address.neighbourhood, address.quarter, address.town, address.village];
+    var inAbuja = /abuja|fct|federal capital/i.test([address.city, address.state, address.county, address.state_district].join(" "));
+    for (var i = 0; i < candidates.length; i++) {
+      if (!candidates[i]) continue;
+      var norm = normalise(candidates[i]);
+      for (var j = 0; j < COVERED_AREAS.length; j++) {
+        if (norm.indexOf(normalise(COVERED_AREAS[j])) !== -1 || normalise(COVERED_AREAS[j]).indexOf(norm) !== -1) {
+          return { status: "covered", area: COVERED_AREAS[j] };
+        }
+      }
+    }
+    return inAbuja ? { status: "abuja", area: "" } : { status: "outside", area: "" };
+  }
+
+  function applyAreaFilter(area, status) {
+    var allCards = Array.from(document.querySelectorAll("#rest-grid-wrap .rest-card"));
+    allCards.forEach(function(card) {
+      if (!area || status !== "covered") {
+        card.style.display = "";
+      } else {
+        card.style.display = (card.dataset.area === area) ? "" : "none";
+      }
+    });
+    var visible = allCards.filter(function(c){ return c.style.display !== "none"; }).length;
+    if (restStatus) {
+      if (status === "covered") restStatus.textContent = "Showing " + visible + " restaurant" + (visible !== 1 ? "s" : "") + " in " + area + ".";
+      else if (status === "abuja") restStatus.textContent = "You're in Abuja — we're expanding to your area soon. Showing all Abuja results.";
+      else restStatus.textContent = "You're outside Abuja — showing all Abuja results. We're launching in more cities soon.";
+    }
+  }
+
   function applyVerifiedUI(opts) {
     opts = opts || {};
     var scroll = !!opts.scroll;
-    locBadge.textContent = "Location verified · " + verifiedLabel;
-    locBadge.classList.add("verified");
+    locBadge.classList.remove("verified", "outside");
+    if (verifiedStatus === "covered") {
+      locBadge.textContent = "📍 " + verifiedArea;
+      locBadge.classList.add("verified");
+    } else if (verifiedStatus === "abuja") {
+      locBadge.textContent = "📍 Abuja (all results)";
+      locBadge.classList.add("verified");
+    } else {
+      locBadge.textContent = "📍 Outside Abuja";
+      locBadge.classList.add("outside");
+    }
+    if (btnChangeLocation) btnChangeLocation.style.display = "inline";
+    if (verifyRow) verifyRow.style.display = "none";
+    if (areaSelectWrap) areaSelectWrap.style.display = "none";
+    hideGeoHint();
     if (aiReply) aiReply.innerHTML = aiCopyVerified;
     if (restPlaceholder) restPlaceholder.hidden = true;
     if (restGridWrap) restGridWrap.hidden = false;
-    if (restStatus) restStatus.textContent = "Nearest restaurants (preview) sorted from your verified position. Full search results coming soon.";
-    try { sessionStorage.setItem(STORAGE_VERIFIED, "1"); sessionStorage.setItem(STORAGE_LABEL, verifiedLabel); } catch (e) {}
+    applyAreaFilter(verifiedArea, verifiedStatus);
+    try {
+      localStorage.setItem(STORAGE_VERIFIED, "1");
+      localStorage.setItem(STORAGE_LABEL, verifiedArea || verifiedStatus);
+      localStorage.setItem(STORAGE_AREA, JSON.stringify({ area: verifiedArea, status: verifiedStatus }));
+    } catch (e) {}
     if (scroll) {
       var smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       document.getElementById("restaurants").scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" });
@@ -309,28 +374,117 @@ function initLandingScripts() {
     }
   }
 
-  function setVerified(label, scroll) { locationVerified = true; verifiedLabel = label; hideGeoHint(); applyVerifiedUI({ scroll: scroll }); }
-
-  if (sessionStorage.getItem(STORAGE_VERIFIED) === "1") {
-    verifiedLabel = sessionStorage.getItem(STORAGE_LABEL) || "Abuja";
+  function setVerified(area, status, scroll) {
     locationVerified = true;
-    applyVerifiedUI({ scroll: false });
+    verifiedArea = area;
+    verifiedStatus = status;
+    verifiedLabel = area || status;
+    applyVerifiedUI({ scroll: scroll });
+  }
+
+  function showManualDropdown(msg) {
+    if (msg) showGeoHint(msg);
+    if (!areaSelectWrap) return;
+    areaSelectWrap.innerHTML = "";
+    var p = document.createElement("p");
+    p.textContent = "Select your area in Abuja:";
+    var sel = document.createElement("select");
+    sel.setAttribute("aria-label", "Select your area");
+    var defaultOpt = document.createElement("option");
+    defaultOpt.value = ""; defaultOpt.textContent = "— Choose your area —";
+    sel.appendChild(defaultOpt);
+    COVERED_AREAS.forEach(function(area) {
+      var opt = document.createElement("option");
+      opt.value = area; opt.textContent = area;
+      sel.appendChild(opt);
+    });
+    var otherOpt = document.createElement("option");
+    otherOpt.value = "other"; otherOpt.textContent = "Other area in Abuja";
+    sel.appendChild(otherOpt);
+    sel.addEventListener("change", function() {
+      if (!sel.value) return;
+      if (sel.value === "other") {
+        setVerified("", "abuja", true);
+      } else {
+        setVerified(sel.value, "covered", true);
+      }
+    });
+    areaSelectWrap.appendChild(p);
+    areaSelectWrap.appendChild(sel);
+    areaSelectWrap.style.display = "block";
+  }
+
+  function resetLocation() {
+    locationVerified = false;
+    verifiedArea = "";
+    verifiedStatus = "";
+    verifiedLabel = "";
+    locBadge.textContent = "Location not verified";
+    locBadge.classList.remove("verified", "outside");
+    if (btnChangeLocation) btnChangeLocation.style.display = "none";
+    if (verifyRow) verifyRow.style.display = "";
+    if (areaSelectWrap) { areaSelectWrap.innerHTML = ""; areaSelectWrap.style.display = "none"; }
+    hideGeoHint();
+    var allCards = Array.from(document.querySelectorAll("#rest-grid-wrap .rest-card"));
+    allCards.forEach(function(c){ c.style.display = ""; });
+    if (restStatus) restStatus.textContent = "Showing 13 Abuja restaurants. Tap a dish tag to filter by a popular menu item.";
+    try { localStorage.removeItem(STORAGE_VERIFIED); localStorage.removeItem(STORAGE_LABEL); localStorage.removeItem(STORAGE_AREA); } catch(e) {}
+  }
+
+  try {
+    var saved = localStorage.getItem(STORAGE_AREA);
+    if (saved) {
+      var parsed = JSON.parse(saved);
+      if (parsed && parsed.status) {
+        verifiedArea = parsed.area || "";
+        verifiedStatus = parsed.status;
+        verifiedLabel = verifiedArea || verifiedStatus;
+        locationVerified = true;
+        applyVerifiedUI({ scroll: false });
+      }
+    }
+  } catch(e) {}
+
+  if (btnChangeLocation) {
+    btnChangeLocation.style.display = locationVerified ? "inline" : "none";
+    btnChangeLocation.addEventListener("click", resetLocation);
   }
 
   document.getElementById("btn-verify-location").addEventListener("click", function () {
     hideGeoHint();
-    if (!navigator.geolocation) { showGeoHint("Location isn't available in this browser. Use \"I'm in Abuja (no GPS)\" instead."); return; }
+    if (areaSelectWrap) { areaSelectWrap.innerHTML = ""; areaSelectWrap.style.display = "none"; }
+    if (!navigator.geolocation) { showManualDropdown("Location isn't available in this browser. Please select your area."); return; }
+    showGeoHint("Detecting your location…");
+    var timer = setTimeout(function() {
+      showManualDropdown("Could not detect location — please select your area");
+    }, 5000);
     navigator.geolocation.getCurrentPosition(
-      function () { setVerified("GPS / approx. position", true); },
-      function (err) {
-        var msg = err && err.code === 1 ? "Permission denied. You can still confirm Abuja with the button next to this message." : "Couldn't read your position. Try again or use \"I'm in Abuja (no GPS)\".";
-        showGeoHint(msg);
+      function(pos) {
+        clearTimeout(timer);
+        hideGeoHint();
+        var lat = pos.coords.latitude;
+        var lon = pos.coords.longitude;
+        fetch("https://nominatim.openstreetmap.org/reverse?lat=" + lat + "&lon=" + lon + "&format=json", { headers: { "Accept-Language": "en" } })
+          .then(function(r) { return r.json(); })
+          .then(function(data) {
+            var addr = data.address || {};
+            var result = matchArea(addr);
+            setVerified(result.area, result.status, true);
+          })
+          .catch(function() { showManualDropdown("Location lookup failed — please select your area"); });
       },
-      { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 }
+      function(err) {
+        clearTimeout(timer);
+        var msg = err && err.code === 1
+          ? "Permission denied — please select your area"
+          : "Could not detect location — please select your area";
+        showManualDropdown(msg);
+      },
+      { enableHighAccuracy: false, timeout: 5000, maximumAge: 300000 }
     );
   });
 
-  document.getElementById("btn-verify-fallback").addEventListener("click", function () { setVerified("Abuja (manual)", true); });
+  document.getElementById("btn-verify-fallback").addEventListener("click", function () { showManualDropdown(""); });
 
   document.querySelectorAll(".chip[data-fill]").forEach(function (chip) {
     chip.addEventListener("click", function () { dishInput.value = chip.getAttribute("data-fill"); dishInput.focus(); });
@@ -664,11 +818,13 @@ export default function LandingPage() {
                 <button type="button" className="btn btn-orange" id="btn-find-dish">Find Dish</button>
               </div>
               <p className="hero-city-note">Serving <strong>Abuja</strong> first. Use the menu next to search to peek at other states (coming soon).</p>
-              <div className="location-verify-row">
+              <div className="location-verify-row" id="location-verify-row">
                 <span className="loc-status-badge" id="loc-status-badge" aria-live="polite">Location not verified</span>
+                <button type="button" className="btn-change-location" id="btn-change-location" style={{display:"none"}}>Change location</button>
                 <button type="button" className="btn btn-ghost-hero" id="btn-verify-location">Verify my location</button>
                 <button type="button" className="btn btn-ghost-hero" id="btn-verify-fallback">I'm in Abuja (no GPS)</button>
               </div>
+              <div id="area-select-wrap" style={{display:"none"}}></div>
               <p className="geo-hint font-mono" id="geo-hint" role="status"></p>
               <div style={{marginTop: "var(--space-4)", paddingTop: "var(--space-4)", borderTop: "1px solid rgba(250,245,236,0.25)"}}>
                 <p style={{margin: "0 0 var(--space-2)", fontSize: "0.95rem"}}>No results in your area yet? Get notified when we launch near you.</p>
@@ -778,7 +934,7 @@ export default function LandingPage() {
                 {name:"Palm & Pepper Kitchen",hood:"Jabi",price:"Mid",priceClass:"price-mid",dishes:"Okra Soup,Pepper Soup,Catfish Stew",hours:"10am to 10pm",days:"Mon–Sun",phone:"+2348031122445",phoneDisplay:"+234 803 112 2445"},
                 {name:"Bello's Suya & More",hood:"Garki",price:"Budget",priceClass:"price-budget",dishes:"Suya,Kilishi,Asun",hours:"12pm to 11pm",days:"Mon–Sun",phone:"+2348056677889",phoneDisplay:"+234 805 667 7889"},
               ].map((r) => (
-                <article key={r.name} className="rest-card" data-open-days={r.days} data-dishes={r.dishes}>
+                <article key={r.name} className="rest-card" data-open-days={r.days} data-dishes={r.dishes} data-area={r.hood}>
                   <div className="rest-head">
                     <div><h3>{r.name}</h3><span className="hood">{r.hood}</span></div>
                     <span className="status open">Open today</span>

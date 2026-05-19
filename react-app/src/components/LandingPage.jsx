@@ -308,7 +308,10 @@ const landingCSS = `
   #area-select-wrap p { font-size: 0.8125rem; font-weight: 500; margin: 0 0 0.5rem; color: rgba(10,31,16,0.7); }
 `;
 
+var _landingScriptsInit = false;
 function initLandingScripts() {
+  if (_landingScriptsInit) return;
+  _landingScriptsInit = true;
   var dishInput = document.getElementById("dish-search");
   var locationSelect = document.getElementById("location-select");
   var geoHint = document.getElementById("geo-hint");
@@ -387,7 +390,10 @@ function initLandingScripts() {
       locBadge.classList.add("outside");
     }
     if (btnChangeLocation) btnChangeLocation.style.display = "inline";
-    if (verifyRow) verifyRow.style.display = "none";
+    if (verifyRow) {
+      var verifyBtns = verifyRow.querySelectorAll("#btn-verify-location, #btn-verify-fallback");
+      verifyBtns.forEach(function(btn) { btn.style.display = "none"; });
+    }
     if (areaSelectWrap) areaSelectWrap.style.display = "none";
     hideGeoHint();
     if (aiReply) aiReply.innerHTML = aiCopyVerified;
@@ -454,7 +460,10 @@ function initLandingScripts() {
     locBadge.textContent = "Location not verified";
     locBadge.classList.remove("verified", "outside");
     if (btnChangeLocation) btnChangeLocation.style.display = "none";
-    if (verifyRow) verifyRow.style.display = "";
+    if (verifyRow) {
+      var verifyBtns = verifyRow.querySelectorAll("#btn-verify-location, #btn-verify-fallback");
+      verifyBtns.forEach(function(btn) { btn.style.display = ""; });
+    }
     if (areaSelectWrap) { areaSelectWrap.innerHTML = ""; areaSelectWrap.style.display = "none"; }
     hideGeoHint();
     var allCards = Array.from(document.querySelectorAll("#rest-grid-wrap .rest-card"));

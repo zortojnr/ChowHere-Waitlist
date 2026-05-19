@@ -21,64 +21,64 @@ const overlayStyle = {
   inset: 0,
   width: "100vw",
   minHeight: "100vh",
-  background: "radial-gradient(circle at top, rgba(224,123,48,0.12), transparent 32%), linear-gradient(180deg, #143822 0%, #0d2418 100%)",
+  background: "radial-gradient(ellipse 80% 60% at 50% 30%, rgba(232,98,26,0.1), transparent 55%), linear-gradient(170deg, #143d22 0%, #09180f 100%)",
   color: "#fff",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
   zIndex: 9999,
   overflow: "hidden",
-  padding: "24px",
+  padding: "1.5rem",
   textAlign: "center",
-  fontFamily: "DM Sans, system-ui, sans-serif"
+  fontFamily: '"DM Sans", system-ui, sans-serif',
+  WebkitFontSmoothing: "antialiased",
 };
 
 const contentStyle = {
   width: "100%",
-  maxWidth: 520,
+  maxWidth: "32rem",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
-  gap: 24
+  gap: "1.75rem",
 };
 
 const phraseRowStyle = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  gap: 18,
   flexWrap: "wrap",
-  minHeight: 100
+  minHeight: "6rem",
 };
 
 const phraseStyle = {
-  fontSize: "clamp(1.3rem, 4vw, 2.1rem)",
+  fontSize: "clamp(1.4rem, 4.5vw, 2.25rem)",
   fontWeight: 700,
-  letterSpacing: "-0.04em",
-  lineHeight: 1.05,
-  minHeight: 72,
+  letterSpacing: "-0.035em",
+  lineHeight: 1.1,
+  minHeight: "4rem",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  padding: "0 12px"
+  padding: "0 0.75rem",
+  color: "#fff",
 };
 
 const logoShellStyle = {
   position: "relative",
-  width: 110,
-  height: 110,
+  width: "7rem",
+  height: "7rem",
   display: "grid",
-  placeItems: "center"
+  placeItems: "center",
 };
 
 const logoStyle = {
-  width: 100,
-  height: 100,
-  borderRadius: "26px",
+  width: "6.25rem",
+  height: "6.25rem",
+  borderRadius: "1.5rem",
   background: "linear-gradient(135deg, #0F4C2A 55%, #E8621A 45%)",
-  border: "1px solid rgba(10,31,16,0.18)",
-  boxShadow: "0 24px 80px rgba(0, 0, 0, 0.32)",
+  boxShadow: "0 1.5rem 4rem rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.08)",
   position: "relative",
 };
 
@@ -88,23 +88,28 @@ const titleStyle = {
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  gap: 8,
-  width: "100%"
+  gap: "0.5rem",
+  width: "100%",
 };
 
 const headingStyle = {
   margin: 0,
-  fontSize: "clamp(2rem, 5vw, 3rem)",
-  letterSpacing: "-0.06em",
-  lineHeight: 1.05
+  fontFamily: '"Playfair Display", Georgia, serif',
+  fontSize: "clamp(2.1rem, 5vw, 3.1rem)",
+  fontWeight: 900,
+  letterSpacing: "-0.04em",
+  lineHeight: 1.06,
+  color: "#fff",
 };
 
 const subtitleStyle = {
   margin: 0,
-  fontSize: "clamp(0.95rem, 2.5vw, 1.15rem)",
+  fontSize: "clamp(0.9rem, 2.5vw, 1.05rem)",
   fontWeight: 500,
-  color: "rgba(255, 255, 255, 0.78)",
-  lineHeight: 1.5
+  color: "rgba(255,255,255,0.65)",
+  lineHeight: 1.55,
+  letterSpacing: "0.01em",
+  fontFamily: '"Space Grotesk", "Space Mono", monospace',
 };
 
 export default function SplashScreen({ onComplete = () => {} }) {

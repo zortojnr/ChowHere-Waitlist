@@ -1,5 +1,11 @@
 {
-  "buildCommand": "cd react-app && npm install && npm run build",
-  "outputDirectory": "react-app/dist",
-  "framework": "vite"
+  "builds": [
+    {
+      "src": "react-app/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ]
 }

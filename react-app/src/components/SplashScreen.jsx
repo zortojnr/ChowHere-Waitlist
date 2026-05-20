@@ -16,12 +16,14 @@ const logoDelay = PHRASES.length * phraseCycle;
 const titleDelay = logoDelay + 800;
 const finishDelay = titleDelay + 900;
 
+const VIDEO_URL = "https://res.cloudinary.com/dzr18sd58/video/upload/v1779220119/watermarked_preview_jdneit.mp4";
+
 const overlayStyle = {
   position: "fixed",
   inset: 0,
   width: "100vw",
   minHeight: "100vh",
-  background: "radial-gradient(ellipse 80% 60% at 50% 30%, rgba(232,98,26,0.1), transparent 55%), linear-gradient(170deg, #143d22 0%, #09180f 100%)",
+  background: "#09180f",
   color: "#fff",
   display: "flex",
   alignItems: "center",
@@ -35,6 +37,8 @@ const overlayStyle = {
 };
 
 const contentStyle = {
+  position: "relative",
+  zIndex: 1,
   width: "100%",
   maxWidth: "32rem",
   display: "flex",
@@ -146,11 +150,41 @@ export default function SplashScreen({ onComplete = () => {} }) {
 
   return (
     <div style={overlayStyle}>
+      {/* Background video */}
+      <video
+        aria-hidden="true"
+        autoPlay
+        muted
+        loop
+        playsInline
+        src={VIDEO_URL}
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          pointerEvents: "none",
+        }}
+      />
+      {/* Dark gradient scrim so text is always readable */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: "linear-gradient(170deg, rgba(9,24,15,0.72) 0%, rgba(9,24,15,0.62) 50%, rgba(9,24,15,0.80) 100%)",
+          backdropFilter: "brightness(0.88)",
+          WebkitBackdropFilter: "brightness(0.88)",
+        }}
+      />
+      {/* Subtle orange vignette for brand warmth */}
       <motion.div
         style={{
           position: "absolute",
           inset: 0,
-          background: "radial-gradient(circle at center, rgba(255,255,255,0.03), transparent 30%)"
+          background: "radial-gradient(ellipse 70% 55% at 50% 30%, rgba(232,98,26,0.12), transparent 60%)",
+          pointerEvents: "none",
         }}
         aria-hidden="true"
       />

@@ -85,17 +85,19 @@ function PageSkeleton() {
         <Skeleton w={100} h={34} r={6} />
       </div>
       {/* hero */}
-      <div style={{ padding: "88px 24px 72px", maxWidth: 620, margin: "0 auto", display: "flex", flexDirection: "column", gap: 16, alignItems: "center" }}>
-        <Skeleton w={140} h={12} r={4} />
-        <Skeleton w="80%" h={52} r={6} />
-        <Skeleton w="60%" h={36} r={6} />
-        <Skeleton w="50%" h={36} r={6} />
-        <Skeleton w="100%" h={52} r={8} style={{ marginTop: 8 }} />
-        {[0,1,2].map(i => <Skeleton key={i} w="100%" h={54} r={8} />)}
-        <Skeleton w="90%" h={20} r={4} style={{ marginTop: 12 }} />
-        <div style={{ display: "flex", gap: 12, width: "100%", justifyContent: "center" }}>
-          <Skeleton w={160} h={48} r={6} />
-          <Skeleton w={140} h={48} r={6} />
+      <div style={{ padding: "88px 24px 72px", background: "#0F1F15", minHeight: "100svh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ maxWidth: 620, width: "100%", display: "flex", flexDirection: "column", gap: 16, alignItems: "center" }}>
+          <Skeleton w={140} h={12} r={4} style={{ background: "rgba(224,123,48,.3)" }} />
+          <Skeleton w="80%" h={52} r={6} style={{ background: "rgba(255,255,255,.1)" }} />
+          <Skeleton w="60%" h={36} r={6} style={{ background: "rgba(255,255,255,.08)" }} />
+          <Skeleton w="50%" h={36} r={6} style={{ background: "rgba(255,255,255,.08)" }} />
+          <Skeleton w="100%" h={52} r={8} style={{ marginTop: 8, background: "rgba(255,255,255,.07)" }} />
+          {[0,1,2].map(i => <Skeleton key={i} w="100%" h={54} r={8} style={{ background: "rgba(255,255,255,.06)" }} />)}
+          <Skeleton w="90%" h={20} r={4} style={{ marginTop: 12, background: "rgba(255,255,255,.07)" }} />
+          <div style={{ display: "flex", gap: 12, width: "100%", justifyContent: "center" }}>
+            <Skeleton w={160} h={48} r={6} style={{ background: "rgba(224,123,48,.35)" }} />
+            <Skeleton w={140} h={48} r={6} style={{ background: "rgba(255,255,255,.1)" }} />
+          </div>
         </div>
       </div>
       {/* how it works */}
@@ -381,6 +383,20 @@ export default function WaitlistPage() {
         }
         .pill:hover { background: #1A5C3A; color: white; }
 
+        .hero-pill {
+          display: inline-block;
+          padding: 5px 13px;
+          border: 1px solid rgba(255,255,255,.25);
+          border-radius: 20px;
+          font-size: 11px;
+          font-family: sans-serif;
+          margin: 3px;
+          color: rgba(255,255,255,.7);
+          backdrop-filter: blur(4px);
+          transition: background .15s, color .15s, border-color .15s;
+        }
+        .hero-pill:hover { background: rgba(255,255,255,.15); color: white; border-color: rgba(255,255,255,.5); }
+
         .tag {
           font-family: sans-serif;
           font-size: 10px;
@@ -434,6 +450,9 @@ export default function WaitlistPage() {
           .faq-a { font-size: 13.5px; padding-right: 0; }
           .faq-icon { font-size: 20px; }
           nav { padding: 10px 16px !important; }
+          .tw-box { flex-direction: column !important; height: auto !important; padding: 12px 16px !important; gap: 6px !important; }
+          .tw-box .tw-sep { display: none !important; }
+          .tw-dish { min-width: unset !important; text-align: center !important; }
         }
       `}</style>
 
@@ -487,52 +506,45 @@ export default function WaitlistPage() {
         textAlign: "center",
         position: "relative",
         overflow: "hidden",
-        minHeight: 580,
+        minHeight: "100svh",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        background: "#FAF6EF",
-        backgroundImage: "radial-gradient(ellipse 80% 70% at 50% -10%, rgba(26,92,58,.06) 0%, transparent 70%), radial-gradient(ellipse 60% 50% at 85% 60%, rgba(224,123,48,.04) 0%, transparent 60%)",
       }}>
 
-        {/* Abuja map — right side, hidden on small screens */}
-        <svg viewBox="0 0 500 380" style={{ position: "absolute", right: "-2%", top: "50%", transform: "translateY(-50%)", width: "44vw", maxWidth: 440, pointerEvents: "none", opacity: .9, display: "var(--map-display, block)" }} aria-hidden="true">
-          <ellipse cx="250" cy="190" rx="210" ry="160" fill="none" stroke="#1A5C3A" strokeWidth="0.7" strokeDasharray="5 4" opacity="0.13"/>
-          <ellipse cx="250" cy="190" rx="150" ry="110" fill="none" stroke="#E07B30" strokeWidth="0.5" strokeDasharray="3 5" opacity="0.09"/>
-          <line x1="40" y1="190" x2="460" y2="190" stroke="#1A5C3A" strokeWidth="0.7" opacity="0.09"/>
-          <line x1="250" y1="30" x2="250" y2="350" stroke="#1A5C3A" strokeWidth="0.7" opacity="0.09"/>
-          {[
-            [250,190,"CBD"],[182,148,"Wuse 2"],[315,138,"Maitama"],
-            [172,238,"Garki"],[325,250,"Asokoro"],[148,192,"Area 11"],
-            [318,195,"Utako"],[195,275,"Gwarinpa"],[288,290,"Kado"],
-          ].map(([x,y,label],i) => (
-            <g key={label}>
-              <circle cx={x} cy={y} r="5" fill="#E07B30" opacity="0.8">
-                <animate attributeName="r" values="4;8;4" dur={`${2.5+i*0.3}s`} repeatCount="indefinite"/>
-                <animate attributeName="opacity" values="0.8;0.35;0.8" dur={`${2.5+i*0.3}s`} repeatCount="indefinite"/>
-              </circle>
-              <circle cx={x} cy={y} r="14" fill="#E07B30" opacity="0.06"/>
-              <text x={x+14} y={y+4} fontSize="8" fill="#1A5C3A" fontFamily="sans-serif" opacity="0.65">{label}</text>
-            </g>
-          ))}
-          <circle cx="250" cy="190" r="7" fill="#E07B30" opacity="0.88"/>
-        </svg>
+        {/* Video background */}
+        <video
+          autoPlay muted loop playsInline
+          style={{
+            position: "absolute", inset: 0,
+            width: "100%", height: "100%",
+            objectFit: "cover", objectPosition: "center",
+            zIndex: 0,
+          }}
+          src="https://res.cloudinary.com/dzr18sd58/video/upload/v1779547842/watermarked_preview_2_oo48fo.mp4"
+        />
 
-        <div style={{ position: "relative", zIndex: 2, maxWidth: 620 }} className="fade">
-          <p className="tag">Abuja · Nigeria · Launching Soon</p>
+        {/* Dim overlay — gradient so bottom edge fades cleanly into next section */}
+        <div style={{
+          position: "absolute", inset: 0, zIndex: 1,
+          background: "linear-gradient(to bottom, rgba(8,20,13,.80) 0%, rgba(8,20,13,.70) 55%, rgba(8,20,13,.92) 100%)",
+        }} />
 
-          <h1 style={{ fontSize: "clamp(36px,6.5vw,64px)", fontWeight: 400, lineHeight: 1.08, marginBottom: 28, letterSpacing: "-.02em" }}>
+        <div style={{ position: "relative", zIndex: 2, maxWidth: 620, width: "100%" }} className="fade">
+          <p className="tag" style={{ color: "#E07B30" }}>Abuja · Nigeria · Launching Soon</p>
+
+          <h1 style={{ fontSize: "clamp(34px,6.5vw,64px)", fontWeight: 400, lineHeight: 1.08, marginBottom: 28, letterSpacing: "-.02em", color: "white" }}>
             Find the exact dish<br/>
-            <em style={{ color: "#1A5C3A", fontStyle: "italic" }}>you're craving</em><br/>
+            <em style={{ color: "#E07B30", fontStyle: "italic" }}>you're craving</em><br/>
             right now.
           </h1>
 
           {/* Typewriter dish ticker */}
-          <div style={{ height: 52, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 12, marginBottom: 44, background: "rgba(15,31,21,.05)", borderRadius: 8, padding: "0 22px" }}>
-            <span style={{ fontSize: 17, color: "#0F1F15", fontFamily: "sans-serif", fontWeight: 700, flexShrink: 0, letterSpacing: "-.01em" }}>Searching for</span>
-            <span style={{ width: 1, height: 20, background: "rgba(15,31,21,.12)", flexShrink: 0 }} />
-            <span style={{ fontSize: 18, color: "#E07B30", fontWeight: 600, fontFamily: "Georgia, serif", fontStyle: "italic", minWidth: 180, textAlign: "left" }}>
+          <div className="tw-box" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 12, marginBottom: 44, background: "rgba(0,0,0,.35)", borderRadius: 8, padding: "0 22px", height: 52, backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)", maxWidth: "100%" }}>
+            <span style={{ fontSize: 15, color: "rgba(255,255,255,.8)", fontFamily: "sans-serif", fontWeight: 700, flexShrink: 0, letterSpacing: "-.01em" }}>Searching for</span>
+            <span className="tw-sep" style={{ width: 1, height: 20, background: "rgba(255,255,255,.2)", flexShrink: 0 }} />
+            <span className="tw-dish" style={{ fontSize: 18, color: "#E07B30", fontWeight: 600, fontFamily: "Georgia, serif", fontStyle: "italic", minWidth: 180, textAlign: "left" }}>
               {typedDish}<span className="tw-cursor" />
             </span>
           </div>
@@ -543,7 +555,7 @@ export default function WaitlistPage() {
               <div
                 key={i}
                 className="have-card fade"
-                style={{ animationDelay: `${i * 0.1 + 0.2}s` }}
+                style={{ animationDelay: `${i * 0.1 + 0.2}s`, background: "rgba(255,255,255,.93)" }}
               >
                 <span className="have-num">{item.n}</span>
                 {item.q}
@@ -551,13 +563,13 @@ export default function WaitlistPage() {
             ))}
           </div>
 
-          <p style={{ fontSize: 17, lineHeight: 1.78, maxWidth: 480, margin: "0 auto 38px", color: "#5a5a5a", fontFamily: "sans-serif" }}>
+          <p style={{ fontSize: 17, lineHeight: 1.78, maxWidth: 480, margin: "0 auto 38px", color: "rgba(255,255,255,.75)", fontFamily: "sans-serif" }}>
             Chow Here is Abuja's first dish-first food discovery platform. Type the dish. Find where to eat it. Go.
           </p>
 
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginBottom: 48 }}>
             <a href="#waitlist" style={{
-              background: "#1A5C3A",
+              background: "#E07B30",
               color: "white",
               padding: "15px 36px",
               textDecoration: "none",
@@ -566,33 +578,33 @@ export default function WaitlistPage() {
               fontFamily: "sans-serif",
               fontWeight: 600,
               letterSpacing: ".01em",
-              boxShadow: "0 4px 16px rgba(26,92,58,.22)",
-              transition: "transform .15s, box-shadow .2s",
+              boxShadow: "0 4px 18px rgba(224,123,48,.4)",
+              transition: "transform .15s, box-shadow .2s, background .15s",
             }}
-              onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 24px rgba(26,92,58,.28)"; }}
-              onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 4px 16px rgba(26,92,58,.22)"; }}
+              onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 26px rgba(224,123,48,.5)"; e.currentTarget.style.background = "#c96a20"; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 4px 18px rgba(224,123,48,.4)"; e.currentTarget.style.background = "#E07B30"; }}
             >Join the waitlist</a>
             <a href="#how-it-works" style={{
               background: "transparent",
-              color: "#1A5C3A",
+              color: "white",
               padding: "15px 36px",
               textDecoration: "none",
               fontSize: 15,
-              border: "1.5px solid rgba(26,92,58,.3)",
+              border: "1.5px solid rgba(255,255,255,.4)",
               borderRadius: 6,
               fontFamily: "sans-serif",
               fontWeight: 600,
               transition: "border-color .15s, background .15s",
             }}
-              onMouseEnter={e => { e.currentTarget.style.background = "rgba(26,92,58,.05)"; e.currentTarget.style.borderColor = "#1A5C3A"; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = "rgba(26,92,58,.3)"; }}
+              onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,.1)"; e.currentTarget.style.borderColor = "rgba(255,255,255,.8)"; }}
+              onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = "rgba(255,255,255,.4)"; }}
             >How it works</a>
           </div>
 
           <div>
-            <p style={{ fontFamily: "sans-serif", fontSize: 10, color: "#aaa", marginBottom: 10, letterSpacing: 1.5, textTransform: "uppercase" }}>Starting in these Abuja areas</p>
+            <p style={{ fontFamily: "sans-serif", fontSize: 10, color: "rgba(255,255,255,.4)", marginBottom: 10, letterSpacing: 1.5, textTransform: "uppercase" }}>Starting in these Abuja areas</p>
             {["Wuse 2","Maitama","Garki","Gwarinpa","Asokoro","Utako","Jabi","Kado","Area 11"].map(a => (
-              <span key={a} className="pill">{a}</span>
+              <span key={a} className="hero-pill">{a}</span>
             ))}
           </div>
         </div>

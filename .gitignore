@@ -1,6 +1,9 @@
 .DS_Store
 Thumbs.db
 .cursor/
+.claude/
 node_modules/
 react-app/node_modules/
 react-app/dist/
+react-app/.env.local
+.env.local

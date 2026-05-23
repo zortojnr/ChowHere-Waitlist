@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import emailjs from "@emailjs/browser";
 
 function useTypewriter(text, speed = 62) {
   const [len, setLen] = useState(0);
@@ -99,44 +100,17 @@ export default function WaitlistPage() {
       });
       if (!sbRes.ok) throw new Error("Database error");
 
-      await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${import.meta.env.VITE_RESEND_API_KEY}`,
+      await emailjs.send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+        {
+          to_name: form.name,
+          to_email: form.email,
+          hardest_dish: form.dish || "not specified",
+          user_type: form.type,
         },
-        body: JSON.stringify({
-          from: "Chow Here <onboarding@resend.dev>",
-          to: [form.email],
-          subject: "You're on the Chow Here waitlist 🍲",
-          html: `
-            <div style="font-family:Georgia,serif;max-width:520px;margin:0 auto;padding:40px 24px;color:#0F1F15">
-              <div style="margin-bottom:32px">
-                <span style="background:#1A5C3A;color:#E07B30;font-weight:700;font-size:13px;padding:6px 14px;border-radius:4px;font-family:sans-serif">CHOW HERE</span>
-              </div>
-              <h1 style="font-size:32px;font-weight:400;line-height:1.2;margin-bottom:20px;color:#0F1F15">You're in. 🍲</h1>
-              <p style="font-size:16px;line-height:1.8;color:#444;font-family:sans-serif;margin-bottom:16px">
-                Welcome to Chow Here. Abuja's first dish-first food discovery platform.
-                You are one of the first people to join and that means something to us.
-              </p>
-              <p style="font-size:16px;line-height:1.8;color:#444;font-family:sans-serif;margin-bottom:16px">
-                We are launching soon. The moment we go live, we will reach out to you personally.
-                In the meantime, tell one person in Abuja about Chow Here.
-              </p>
-              ${form.dish ? `
-              <div style="background:#FAF6EF;border-left:3px solid #E07B30;padding:16px 20px;margin:24px 0;border-radius:0 4px 4px 0">
-                <p style="font-family:sans-serif;font-size:14px;color:#666;margin:0 0 4px">You said you struggle to find:</p>
-                <p style="font-family:Georgia,serif;font-size:18px;color:#1A5C3A;margin:0;font-style:italic">${form.dish}</p>
-                <p style="font-family:sans-serif;font-size:13px;color:#888;margin:8px 0 0">It is on our list. We will find it.</p>
-              </div>` : ""}
-              <p style="font-size:16px;line-height:1.8;color:#444;font-family:sans-serif;margin-bottom:32px">See you on the other side.</p>
-              <p style="font-size:15px;color:#1A5C3A;font-family:sans-serif">The Chow Here Team</p>
-              <hr style="border:none;border-top:1px solid #eee;margin:32px 0" />
-              <p style="font-size:12px;color:#aaa;font-family:sans-serif">Chow Here · Abuja, Nigeria · chowhere.com</p>
-            </div>
-          `,
-        }),
-      });
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+      );
       setStatus("success");
     } catch (err) {
       console.error(err);

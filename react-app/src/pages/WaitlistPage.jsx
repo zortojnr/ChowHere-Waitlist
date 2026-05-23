@@ -62,7 +62,103 @@ const STEPS = [
   { n: "03", title: "Go eat", body: "No delivery fee. No commission. No guessing. Just you and the dish you wanted, exactly where to find it." },
 ];
 
+function Skeleton({ w = "100%", h = 16, r = 6, style = {} }) {
+  return (
+    <div style={{
+      width: w, height: h, borderRadius: r,
+      background: "linear-gradient(90deg, #e8e0d4 25%, #f0e9df 50%, #e8e0d4 75%)",
+      backgroundSize: "200% 100%",
+      animation: "shimmer 1.4s infinite",
+      flexShrink: 0,
+      ...style,
+    }} />
+  );
+}
+
+function PageSkeleton() {
+  return (
+    <div style={{ fontFamily: "Georgia, serif", background: "#FAF6EF", minHeight: "100vh", overflow: "hidden" }}>
+      <style>{`@keyframes shimmer { 0% { background-position: 200% 0 } 100% { background-position: -200% 0 } }`}</style>
+      {/* nav */}
+      <div style={{ padding: "12px 32px", display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid rgba(26,92,58,.08)" }}>
+        <Skeleton w={110} h={24} r={6} />
+        <Skeleton w={100} h={34} r={6} />
+      </div>
+      {/* hero */}
+      <div style={{ padding: "88px 24px 72px", maxWidth: 620, margin: "0 auto", display: "flex", flexDirection: "column", gap: 16, alignItems: "center" }}>
+        <Skeleton w={140} h={12} r={4} />
+        <Skeleton w="80%" h={52} r={6} />
+        <Skeleton w="60%" h={36} r={6} />
+        <Skeleton w="50%" h={36} r={6} />
+        <Skeleton w="100%" h={52} r={8} style={{ marginTop: 8 }} />
+        {[0,1,2].map(i => <Skeleton key={i} w="100%" h={54} r={8} />)}
+        <Skeleton w="90%" h={20} r={4} style={{ marginTop: 12 }} />
+        <div style={{ display: "flex", gap: 12, width: "100%", justifyContent: "center" }}>
+          <Skeleton w={160} h={48} r={6} />
+          <Skeleton w={140} h={48} r={6} />
+        </div>
+      </div>
+      {/* how it works */}
+      <div style={{ background: "#1A5C3A", padding: "80px 24px" }}>
+        <div style={{ maxWidth: 780, margin: "0 auto" }}>
+          <Skeleton w={120} h={12} r={4} style={{ background: "rgba(224,123,48,.3)" }} />
+          <Skeleton w="50%" h={40} r={6} style={{ marginTop: 12, background: "rgba(255,255,255,.1)" }} />
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: 40, marginTop: 40 }}>
+            {[0,1,2].map(i => (
+              <div key={i} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                <Skeleton w={48} h={44} r={4} style={{ background: "rgba(255,255,255,.1)" }} />
+                <Skeleton w="70%" h={22} r={4} style={{ background: "rgba(255,255,255,.1)" }} />
+                <Skeleton w="100%" h={14} r={4} style={{ background: "rgba(255,255,255,.07)" }} />
+                <Skeleton w="80%" h={14} r={4} style={{ background: "rgba(255,255,255,.07)" }} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      {/* stats */}
+      <div style={{ padding: "64px 24px" }}>
+        <div style={{ maxWidth: 780, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(160px,1fr))", gap: 24 }}>
+          {[0,1,2].map(i => (
+            <div key={i} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <Skeleton w={80} h={52} r={4} />
+              <Skeleton w={120} h={14} r={4} />
+            </div>
+          ))}
+        </div>
+      </div>
+      {/* faq */}
+      <div style={{ background: "white", padding: "80px 24px" }}>
+        <div style={{ maxWidth: 640, margin: "0 auto", display: "flex", flexDirection: "column", gap: 20 }}>
+          <Skeleton w={100} h={12} r={4} />
+          <Skeleton w="60%" h={38} r={6} />
+          {[0,1,2,3,4,5].map(i => (
+            <div key={i} style={{ paddingBottom: 20, borderBottom: "1px solid rgba(26,92,58,.08)", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16 }}>
+              <Skeleton w="80%" h={18} r={4} />
+              <Skeleton w={24} h={24} r={4} />
+            </div>
+          ))}
+        </div>
+      </div>
+      {/* waitlist form */}
+      <div style={{ background: "#0F1F15", padding: "80px 24px 88px" }}>
+        <div style={{ maxWidth: 480, margin: "0 auto", display: "flex", flexDirection: "column", gap: 20 }}>
+          <Skeleton w="60%" h={44} r={6} style={{ background: "rgba(255,255,255,.1)" }} />
+          <Skeleton w="90%" h={18} r={4} style={{ background: "rgba(255,255,255,.07)" }} />
+          {[0,1,2,3,4].map(i => (
+            <div key={i} style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              <Skeleton w={100} h={12} r={4} style={{ background: "rgba(255,255,255,.08)" }} />
+              <Skeleton w="100%" h={48} r={6} style={{ background: "rgba(255,255,255,.07)" }} />
+            </div>
+          ))}
+          <Skeleton w="100%" h={52} r={6} style={{ background: "rgba(224,123,48,.3)", marginTop: 8 }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function WaitlistPage() {
+  const [pageReady, setPageReady] = useState(false);
   const [dishIndex, setDishIndex] = useState(0);
   const [openFaq, setOpenFaq] = useState(null);
   const [form, setForm] = useState({ name: "", email: "", whatsapp: "", type: "diner", dish: "" });
@@ -70,6 +166,11 @@ export default function WaitlistPage() {
   const [errorMsg, setErrorMsg] = useState("");
 
   const typedDish = useTypewriter(DISHES[dishIndex], 62);
+
+  useEffect(() => {
+    const t = setTimeout(() => setPageReady(true), 900);
+    return () => clearTimeout(t);
+  }, []);
 
   useEffect(() => {
     const t = setInterval(() => setDishIndex(i => (i + 1) % DISHES.length), 2600);
@@ -119,13 +220,16 @@ export default function WaitlistPage() {
     }
   };
 
+  if (!pageReady) return <PageSkeleton />;
+
   return (
-    <div style={{ fontFamily: "Georgia, serif", background: "#FAF6EF", color: "#0F1F15", minHeight: "100vh" }}>
+    <div style={{ fontFamily: "Georgia, serif", background: "#FAF6EF", color: "#0F1F15", minHeight: "100vh", overflowX: "hidden" }}>
       <style>{`
         @keyframes fadeUp { from { opacity:0; transform:translateY(20px) } to { opacity:1; transform:translateY(0) } }
         @keyframes blink { 0%,100% { opacity:1 } 50% { opacity:0 } }
         @keyframes mapPulse { 0%,100% { r:5 } 50% { r:9 } }
         @keyframes subtleIn { from { opacity:0; transform:translateY(10px) } to { opacity:1; transform:translateY(0) } }
+        @keyframes shimmer { 0% { background-position: 200% 0 } 100% { background-position: -200% 0 } }
 
         * { box-sizing: border-box; }
         .fade { animation: fadeUp .7s cubic-bezier(.22,1,.36,1) both }
@@ -189,13 +293,16 @@ export default function WaitlistPage() {
           border-bottom: 1px solid rgba(26,92,58,.1);
           cursor: pointer;
           padding: 22px 0;
+          width: 100%;
+          overflow: hidden;
         }
         .faq-item:first-of-type { border-top: 1px solid rgba(26,92,58,.1); }
         .faq-header {
           display: flex;
           justify-content: space-between;
           align-items: flex-start;
-          gap: 20px;
+          gap: 12px;
+          width: 100%;
         }
         .faq-q {
           font-size: 16px;
@@ -204,6 +311,9 @@ export default function WaitlistPage() {
           margin: 0;
           transition: color .2s;
           font-family: Georgia, serif;
+          flex: 1;
+          min-width: 0;
+          word-break: break-word;
         }
         .faq-item:hover .faq-q { color: #E07B30; }
         .faq-a {
@@ -213,7 +323,8 @@ export default function WaitlistPage() {
           font-family: sans-serif;
           margin: 14px 0 0;
           animation: subtleIn .22s ease both;
-          padding-right: 32px;
+          padding-right: 8px;
+          word-break: break-word;
         }
         .faq-icon {
           font-size: 22px;
@@ -224,6 +335,7 @@ export default function WaitlistPage() {
           transition: transform .22s cubic-bezier(.22,1,.36,1);
           font-family: sans-serif;
           font-weight: 300;
+          user-select: none;
         }
 
         .have-card {
@@ -315,8 +427,13 @@ export default function WaitlistPage() {
         }
 
         @media (max-width: 600px) {
+          :root { --map-display: none; }
           .have-card { padding: 18px 18px 18px 50px; }
           .have-num { font-size: 18px; left: 14px; }
+          .faq-q { font-size: 14.5px; }
+          .faq-a { font-size: 13.5px; padding-right: 0; }
+          .faq-icon { font-size: 20px; }
+          nav { padding: 10px 16px !important; }
         }
       `}</style>
 
@@ -379,8 +496,8 @@ export default function WaitlistPage() {
         backgroundImage: "radial-gradient(ellipse 80% 70% at 50% -10%, rgba(26,92,58,.06) 0%, transparent 70%), radial-gradient(ellipse 60% 50% at 85% 60%, rgba(224,123,48,.04) 0%, transparent 60%)",
       }}>
 
-        {/* Abuja map — right side */}
-        <svg viewBox="0 0 500 380" style={{ position: "absolute", right: "-2%", top: "50%", transform: "translateY(-50%)", width: "44vw", maxWidth: 440, pointerEvents: "none", opacity: .9 }} aria-hidden="true">
+        {/* Abuja map — right side, hidden on small screens */}
+        <svg viewBox="0 0 500 380" style={{ position: "absolute", right: "-2%", top: "50%", transform: "translateY(-50%)", width: "44vw", maxWidth: 440, pointerEvents: "none", opacity: .9, display: "var(--map-display, block)" }} aria-hidden="true">
           <ellipse cx="250" cy="190" rx="210" ry="160" fill="none" stroke="#1A5C3A" strokeWidth="0.7" strokeDasharray="5 4" opacity="0.13"/>
           <ellipse cx="250" cy="190" rx="150" ry="110" fill="none" stroke="#E07B30" strokeWidth="0.5" strokeDasharray="3 5" opacity="0.09"/>
           <line x1="40" y1="190" x2="460" y2="190" stroke="#1A5C3A" strokeWidth="0.7" opacity="0.09"/>
@@ -528,8 +645,8 @@ export default function WaitlistPage() {
       </section>
 
       {/* FAQ */}
-      <section id="faq" style={{ padding: "80px 24px", background: "white" }}>
-        <div style={{ maxWidth: 640, margin: "0 auto" }}>
+      <section id="faq" style={{ padding: "80px 24px", background: "white", overflow: "hidden" }}>
+        <div style={{ maxWidth: 640, margin: "0 auto", width: "100%" }}>
           <p className="tag">Questions</p>
           <h2 style={{ fontSize: "clamp(26px,4vw,44px)", fontWeight: 400, marginBottom: 48, letterSpacing: "-.02em", lineHeight: 1.14 }}>Everything you want to know.</h2>
           {FAQS.map((f, i) => (

@@ -515,9 +515,9 @@ export default function WaitlistPage() {
       }}>
         <div style={{ maxWidth: 780, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(160px,1fr))", gap: 0 }}>
           {[
-            { n: "25+", l: "Restaurants verified" },
+            { n: "10+", l: "Restaurants verified" },
             { n: "20+", l: "Nigerian dishes mapped" },
-            { n: "6",   l: "Abuja areas covered" },
+            { n: "5+",  l: "Abuja areas covered" },
           ].map((s, i) => (
             <div key={s.l} className="stat-block" style={{ padding: "28px 24px 24px", borderRight: i < 3 ? "1px solid rgba(26,92,58,.08)" : "none" }}>
               <div style={{ fontSize: "clamp(44px,5vw,58px)", color: "#1A5C3A", fontStyle: "italic", lineHeight: 1, marginBottom: 8, letterSpacing: "-.03em" }}>{s.n}</div>

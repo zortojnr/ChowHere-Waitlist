@@ -522,7 +522,7 @@ export default function WaitlistPage() {
             objectFit: "cover", objectPosition: "center",
             zIndex: 0,
           }}
-          src="https://res.cloudinary.com/dzr18sd58/video/upload/v1779547842/watermarked_preview_2_oo48fo.mp4"
+          src="https://res.cloudinary.com/dzr18sd58/video/upload/v1779797063/watermarked_preview_2.mp4_j32vmf.mp4"
         />
 
         {/* Dim overlay — gradient so bottom edge fades cleanly into next section */}
